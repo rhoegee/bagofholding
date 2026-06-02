@@ -2037,11 +2037,34 @@ const CREW_CAT_MAP = {
   'misc': 'misc',
 };
 
+function splitCSVLine(line) {
+  const cols = [];
+  let cur = '', inQ = false;
+  for (const ch of line) {
+    if (ch === '"') { inQ = !inQ; }
+    else if (ch === ',' && !inQ) { cols.push(cur.trim()); cur = ''; }
+    else { cur += ch; }
+  }
+  cols.push(cur.trim());
+  return cols.map(c => c.replace(/^"|"$/g, '').trim());
+}
+
 function parseCrewCSV(csv) {
   const lines = csv.split(/\r?\n/).filter(l => l.trim());
   if (lines.length < 2) return null;
 
-  const headers = lines[0].split(',').map(h => h.trim().toLowerCase().replace(/^"|"$/g, ''));
+  // Find the header row — may not be row 1 if sheet has description rows above
+  let headerLineIdx = -1;
+  for (let i = 0; i < Math.min(lines.length, 10); i++) {
+    const lower = lines[i].toLowerCase();
+    if (lower.includes('category') && lower.includes('item')) {
+      headerLineIdx = i;
+      break;
+    }
+  }
+  if (headerLineIdx < 0) return null;
+
+  const headers = splitCSVLine(lines[headerLineIdx]).map(h => h.toLowerCase());
   const colIdx = name => headers.indexOf(name);
   const iCat = colIdx('category');
   const iItem = colIdx('item');
@@ -2060,19 +2083,17 @@ function parseCrewCSV(csv) {
     fresh[k] = { label: v.label, color: v.color, items: [] };
   });
 
-  for (let r = 1; r < lines.length; r++) {
-    // Respect quoted commas in CSV
-    const cols = [];
-    let cur = '', inQ = false;
-    for (const ch of lines[r]) {
-      if (ch === '"') { inQ = !inQ; }
-      else if (ch === ',' && !inQ) { cols.push(cur.trim()); cur = ''; }
-      else { cur += ch; }
-    }
-    cols.push(cur.trim());
+  for (let r = headerLineIdx + 1; r < lines.length; r++) {
+    const cols = splitCSVLine(lines[r]);
+    const get = i => (i >= 0 && i < cols.length ? cols[i] : '');
 
-    const get = i => (i >= 0 && i < cols.length ? cols[i].replace(/^"|"$/g, '').trim() : '');
-    const catRaw = get(iCat).toLowerCase();
+    const catRaw = get(iCat).toLowerCase().trim();
+
+    // Skip section header rows (all-caps), subtotal rows, and blank category rows
+    if (!catRaw) continue;
+    if (catRaw.includes('subtotal') || catRaw.includes('total crew')) continue;
+    if (catRaw === catRaw.toUpperCase() && catRaw.length > 1) continue;
+
     const catKey = CREW_CAT_MAP[catRaw];
     if (!catKey || !fresh[catKey]) continue;
 
@@ -2082,7 +2103,7 @@ function parseCrewCSV(csv) {
     const qty = parseFloat(get(iQty)) || 1;
     const unitOz = parseFloat(get(iUnitOz)) || 0;
     const totalOzRaw = parseFloat(get(iTotalOz));
-    const oz = !isNaN(totalOzRaw) ? totalOzRaw : unitOz * qty;
+    const oz = !isNaN(totalOzRaw) && totalOzRaw > 0 ? totalOzRaw : unitOz * qty;
     const sourceRaw = get(iSource).toUpperCase();
     const source = sourceRaw === 'PHI' ? 'philmont' : 'crew';
 
