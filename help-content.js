@@ -111,6 +111,10 @@ const HELP_CONTENT = [
       {
         q: "Can I edit the crew gear?",
         a: "Yes. Go to the Crew Gear tab and edit items the same way as personal gear."
+      },
+      {
+        q: "Hey wait a second, my crew gear changed. I didn't touch anything.",
+        a: "That's right. Your Lead Advisor has the ability to update the crew gear list for everyone on the trek. It updates automatically every time you refresh the app."
       }
     ]
   },
