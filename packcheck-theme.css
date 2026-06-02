@@ -233,7 +233,7 @@ nav{position:sticky;top:0;z-index:100;background:var(--pc-anchor);
 
 /* ── GEAR TABLE ────────────────────────────────────── */
 /* border-collapse:separate required for position:sticky to work on td/th */
-.gear-table{width:100%;min-width:580px;border-collapse:separate;border-spacing:0;table-layout:fixed;}
+.gear-table{width:100%;min-width:480px;border-collapse:separate;border-spacing:0;table-layout:fixed;}
 .gear-table th{font-family:var(--font-mono);font-size:.56rem;text-transform:uppercase;letter-spacing:.09em;
   color:var(--pc-ink-faint);padding:.5rem .85rem;text-align:left;border-bottom:1px solid var(--pc-line);
   background:var(--pc-bg);font-weight:500;}
