@@ -144,10 +144,10 @@ nav{position:sticky;top:0;z-index:100;background:var(--pc-anchor);
   text-transform:uppercase;letter-spacing:.03em;margin-bottom:1.5rem;display:flex;align-items:center;gap:.75rem;}
 [data-theme="dark"] .modal-title{color:var(--pc-cream);}
 .modal-title svg{width:30px;height:30px;display:block;}
-.modal-field{margin-bottom:1rem;}
+.modal-field{margin-bottom:1rem;min-width:0;}
 .modal-label{font-family:var(--font-mono);font-size:.6rem;text-transform:uppercase;letter-spacing:.1em;
   color:var(--pc-ink-soft);margin-bottom:.35rem;display:block;}
-.modal-input{width:100%;background:var(--pc-bg);border:1px solid var(--pc-line-2);color:var(--pc-ink);
+.modal-input{width:100%;min-width:0;box-sizing:border-box;background:var(--pc-bg);border:1px solid var(--pc-line-2);color:var(--pc-ink);
   font-family:var(--font-body);font-size:1rem;padding:.55rem .75rem;border-radius:4px;outline:none;}
 .modal-input:focus{border-color:var(--pc-accent);}
 .modal-row{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;}

@@ -1490,14 +1490,14 @@ function toggleSection(key){
 }
 function toggleAllItems(cb){
   const newState=cb.checked;
-  Object.values(gearData).forEach(cat=>cat.items.forEach(item=>item.checked=newState));
+  Object.values(gearData).forEach(cat=>cat.items.forEach(item=>item.included=newState));
   saveLocal();renderGear();updateCalc();
 }
 function syncMasterCheckAll(){
   const cb=document.getElementById('master-check-all');
   if(!cb)return;
   const all=Object.values(gearData).flatMap(c=>c.items);
-  const checkedCount=all.filter(i=>i.checked).length;
+  const checkedCount=all.filter(i=>i.included===true).length;
   cb.checked=all.length>0&&checkedCount===all.length;
   cb.indeterminate=checkedCount>0&&checkedCount<all.length;
 }
