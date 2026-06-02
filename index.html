@@ -346,9 +346,9 @@ body[data-gear-layout="cards"] .gear-table tr.edit-row td{display:table-cell;}
   </div>
 
   <div class="hero">
-    <div class="hero-eyebrow">Philmont Scout Ranch · 2026 Guidebook to Adventure</div>
+    <div class="hero-eyebrow">Philmont Scout Ranch · Packing Checklist</div>
     <div class="hero-title">Personal <span>Gear</span></div>
-    <div class="hero-sub">Build your pack against the official Philmont recommended list. Every item, every ounce.</div>
+    <div class="hero-sub">Build your pack against the official Philmont recommended list.</div>
   </div>
 
   <div class="stats-row">
@@ -425,7 +425,7 @@ body[data-gear-layout="cards"] .gear-table tr.edit-row td{display:table-cell;}
       </div>
       <div style="text-align:right;flex-shrink:0;">
         <div style="font-family:'JetBrains Mono',monospace;font-size:0.58rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;">Total Crew Gear</div>
-        <div style="font-family:'Oswald',sans-serif;font-weight:700;text-transform:uppercase;font-size:1.4rem;color:var(--gold);" id="crew-total-display">— oz</div>
+        <div style="font-family:'Oswald',sans-serif;font-weight:700;text-transform:uppercase;font-size:1.4rem;color:var(--pc-accent);" id="crew-total-display">— oz</div>
         <div style="font-family:'JetBrains Mono',monospace;font-size:0.62rem;color:var(--muted2);" id="crew-per-person-display">— per person</div>
       </div>
     </div>
@@ -1127,8 +1127,8 @@ function updateCrewStats(){
     <div style="display:flex;justify-content:space-between;"><span>Total crew gear</span><span style="font-family:'JetBrains Mono',monospace;font-size:0.7rem;color:var(--text)">${ozToStr(Math.round(tot))}</span></div>
     <div style="display:flex;justify-content:space-between;"><span>Tent weight (scouts)</span><span style="font-family:'JetBrains Mono',monospace;font-size:0.7rem;color:var(--text)">${ozToStr(Math.round(tents))}</span></div>
     <div style="height:1px;background:var(--border);margin:0.25rem 0;"></div>
-    <div style="display:flex;justify-content:space-between;"><span style="color:var(--gold2)">Adult share (${adults})</span><span style="font-family:'JetBrains Mono',monospace;font-size:0.7rem;color:var(--gold2)">${ozToStr(Math.round(adultShare))}</span></div>
-    <div style="display:flex;justify-content:space-between;"><span style="color:var(--blue)">Scout share (${scouts})</span><span style="font-family:'JetBrains Mono',monospace;font-size:0.7rem;color:var(--blue)">${ozToStr(Math.round(scoutShare))}</span></div>`;
+    <div style="display:flex;justify-content:space-between;"><span style="color:#7a5c00;font-weight:600;">Adult share (${adults})</span><span style="font-family:'JetBrains Mono',monospace;font-size:0.7rem;color:#7a5c00;font-weight:600;">${ozToStr(Math.round(adultShare))}</span></div>
+    <div style="display:flex;justify-content:space-between;"><span style="color:#1a4a7a;font-weight:600;">Scout share (${scouts})</span><span style="font-family:'JetBrains Mono',monospace;font-size:0.7rem;color:#1a4a7a;font-weight:600;">${ozToStr(Math.round(scoutShare))}</span></div>`;
 
   // Update pack weight calculator crew gear input
   const cgInput=document.getElementById('crew-gear-oz');
@@ -1851,7 +1851,7 @@ function renderItinerary(){
     if(day.dry)badges+=`<span class="badge badge-dry">Dry Camp</span>`;
     if(day.chuck)badges+=`<span class="badge badge-chuck">Chuckwagon</span>`;
     if(day.conserv)badges+=`<span class="badge badge-conserv">Conservation</span>`;
-    if(day.fuel)badges+=`<span class="badge badge-fuel">⛽ Fuel Resupply</span>`;
+    if(day.fuel)badges+=`<span class="badge badge-fuel">Fuel Resupply</span>`;
 
     // Meals
     let mealsHtml='';
