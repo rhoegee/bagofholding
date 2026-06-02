@@ -460,17 +460,22 @@ input[type=range]{flex:1;accent-color:var(--pc-accent);}
 .rules-card ul li::before{content:'—';position:absolute;left:0;color:var(--pc-trim);}
 
 /* ── UTIL ──────────────────────────────────────────── */
-@media(max-width:860px){.hide-sm{display:none!important;}.two-col{grid-template-columns:1fr;}
+@media(max-width:1024px){.hide-sm{display:none!important;}.two-col{grid-template-columns:1fr;}
   .calc-grid,.wb-grid,.rules-grid{grid-template-columns:1fr;}
-  .nav-actions,.nav-total-label,.nav-total-val{display:none!important;}}
+  .nav-actions,.nav-total-label,.nav-total-val{display:none!important;}
+  /* Tabs move to a second sticky row so they're always reachable */
+  nav{flex-wrap:wrap;}
+  .nav-logo{flex:none;border-right:none;border-bottom:1px solid rgba(244,236,216,.1);}
+  .nav-right{flex:1;justify-content:flex-end;border-left:none;border-bottom:1px solid rgba(244,236,216,.1);}
+  .nav-tabs{order:3;flex:0 0 100%;border-top:none;overflow-x:auto;-webkit-overflow-scrolling:touch;}}
 
 /* ── MOBILE (phones ≤640px) ─────────────────────────── */
 @media(max-width:640px){
-  /* Nav: single compressed row */
+  /* Nav: compress the top row */
   .brand-sub{display:none;}
-  .nav-logo{padding:0 .6rem;border-right:none;}
-  .nav-tab{padding:0 .65rem;font-size:.7rem;height:44px;}
-  .nav-right{gap:.4rem;padding:0 .4rem;border-left:none;}
+  .nav-logo{padding:0 .6rem;}
+  .nav-tab{padding:0 .65rem;font-size:.7rem;height:40px;}
+  .nav-right{gap:.4rem;padding:0 .4rem;}
   .nav-profile span{display:none;}
   .nav-profile{padding:.3rem .35rem;}
 
