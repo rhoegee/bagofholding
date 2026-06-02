@@ -434,7 +434,7 @@ body[data-gear-layout="cards"] .gear-table tr.edit-row td{display:table-cell;}
   <div class="stats-row">
     <div class="stat-box"><div class="stat-label">Total Crew Gear</div><div class="stat-val" id="cs-total">—</div><div class="stat-sub">ounces</div></div>
     <div class="stat-box"><div class="stat-label">In Pounds</div><div class="stat-val" id="cs-lbs">—</div><div class="stat-sub">lbs + oz</div></div>
-    <div class="stat-box"><div class="stat-label">Per Person (÷8)</div><div class="stat-val" id="cs-per">—</div><div class="stat-sub">oz each</div></div>
+    <div class="stat-box"><div class="stat-label">Your Crew Share</div><div class="stat-val" id="cs-per">—</div><div class="stat-sub">oz (own tent)</div></div>
     <div class="stat-box hide-sm"><div class="stat-label">Adult Share</div><div class="stat-val" id="cs-adult">—</div><div class="stat-sub">oz (no tent)</div></div>
     <div class="stat-box hide-sm"><div class="stat-label">Scout Share</div><div class="stat-val" id="cs-scout">—</div><div class="stat-sub">oz (w/ tent)</div></div>
   </div>
@@ -446,7 +446,7 @@ body[data-gear-layout="cards"] .gear-table tr.edit-row td{display:table-cell;}
       <div style="display:flex;flex-direction:column;gap:0.6rem;margin-bottom:1.25rem;">
         <div class="calc-row"><span class="calc-label" style="font-size:0.85rem;">Adults (own tent)</span><input class="calc-input" id="crew-adults" type="number" value="3" min="1" max="6" onchange="updateCrewStats()"></div>
         <div class="calc-row"><span class="calc-label" style="font-size:0.85rem;">Scouts (share tent)</span><input class="calc-input" id="crew-scouts" type="number" value="5" min="1" max="11" onchange="updateCrewStats()"></div>
-        <div style="font-size:0.75rem;color:var(--muted);font-style:italic;margin-top:0.25rem;">Adults bring own tents — tent weight excluded from their share</div>
+        <div style="font-size:0.75rem;color:var(--muted);font-style:italic;margin-top:0.25rem;">Adults bring own tents — tent weight excluded from their share. If a scout is carrying their own solo tent, mark them as an adult.</div>
       </div>
       <div style="background:var(--bg3);border:1px solid var(--border);border-radius:3px;padding:0.85rem;margin-bottom:1.25rem;">
         <div style="font-family:'JetBrains Mono',monospace;font-size:0.58rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);margin-bottom:0.6rem;">Share Breakdown</div>
@@ -492,6 +492,13 @@ body[data-gear-layout="cards"] .gear-table tr.edit-row td{display:table-cell;}
         <div class="calc-row"><span class="calc-label">Crew size</span><input class="calc-input" id="crew-size" type="number" value="8" min="7" max="12" onchange="updateCalc()"></div>
         <div class="calc-row"><span class="calc-label">Crew gear total (oz)</span><input class="calc-input" id="crew-gear-oz" type="number" value="564.8" onchange="updateCalc()"></div>
         <div class="calc-note">Auto-updates from Crew Gear tab</div>
+        <div class="calc-row" style="margin-top:0.5rem;">
+          <span class="calc-label">Carrying own tent</span>
+          <label style="display:flex;align-items:center;gap:0.4rem;cursor:pointer;">
+            <input type="checkbox" id="own-tent" onchange="updateCalc()" style="width:16px;height:16px;accent-color:var(--pc-accent);">
+            <span style="font-family:'JetBrains Mono',monospace;font-size:0.7rem;color:var(--muted);">Use adult share (no tent)</span>
+          </label>
+        </div>
         <div class="calc-row"><span class="calc-label">Body weight (lbs)</span><input class="calc-input" id="body-weight" type="number" value="175" onchange="updateCalc()"></div>
         <div style="margin-top:0.75rem;">
           <div style="font-family:'JetBrains Mono',monospace;font-size:0.6rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.35rem;">Staff-Cooked Dinner Nights</div>
@@ -593,6 +600,15 @@ body[data-gear-layout="cards"] .gear-table tr.edit-row td{display:table-cell;}
     <div class="rules-card">
       <div class="rules-card-title">Water Requirements</div>
       <p>Minimum <strong>4 liters personal capacity</strong> at all times plus 2L extra for dry camps. All water from all sources must be purified — Micropur tablets issued. Drink 6–8 quarts per day at altitude.</p>
+    </div>
+    <div class="rules-card">
+      <div class="rules-card-title">Resources</div>
+      <div style="display:flex;flex-direction:column;gap:0.6rem;margin-top:0.25rem;">
+        <a href="https://www.philmontscoutranch.org/resources/" target="_blank" rel="noopener" style="color:var(--pc-anchor);font-weight:600;text-decoration:none;">Philmont Resources ↗</a>
+        <a href="https://www.philmontscoutranch.org/wp-content/uploads/2026/03/2026-Guidebook-to-Adventure.pdf" target="_blank" rel="noopener" style="color:var(--pc-anchor);font-weight:600;text-decoration:none;">2026 Guidebook to Adventure (PDF) ↗</a>
+        <a href="https://filestore.scouting.org/filestore/HealthSafety/pdf/680-001_ABC.pdf" target="_blank" rel="noopener" style="color:var(--pc-anchor);font-weight:600;text-decoration:none;">BSA Annual Health &amp; Medical Record — Parts A, B, C (PDF) ↗</a>
+        <a href="#" onclick="printChecklist();return false;" style="color:var(--pc-anchor);font-weight:600;text-decoration:none;">Print My Gear Checklist ↗</a>
+      </div>
     </div>
     <div class="rules-card">
       <div class="rules-card-title">Itinerary 12-10 Specifics</div>
@@ -1111,7 +1127,7 @@ function updateCrewStats(){
   const csScout=document.getElementById('cs-scout');
   if(csTotal)csTotal.textContent=Math.round(tot);
   if(csLbs)csLbs.innerHTML=`${lbs}<span class="u">lb</span> ${rem}<span class="u">oz</span>`;
-  if(csPer)csPer.textContent=Math.round(adultShare);
+  if(csPer)csPer.textContent=ozToStr(Math.round(adultShare));
   if(csAdult)csAdult.textContent=ozToStr(Math.round(adultShare));
   if(csScout)csScout.textContent=ozToStr(Math.round(scoutShare));
 
@@ -1387,8 +1403,11 @@ function renderGear(){
         <td class="td-weight">${ozToStr(item.oz)}</td>
         <td class="td-notes" ${item.notes?`title="${item.notes}"`:''}>${item.notes||''}</td>
         <td class="td-actions">
-          <input type="checkbox" class="sel-check" title="Select for batch delete" onchange="updateBatchBar()" onclick="event.stopPropagation()">
-          <button class="action-btn del" onclick="removeItem('${key}',${idx})" title="Delete">✕</button>
+          <select class="move-cat-select" title="Move to category" onchange="moveItem('${key}',${idx},this)" onclick="event.stopPropagation()">
+            <option value="">→</option>
+            ${Object.entries(gearData).filter(([k])=>k!==key).map(([k,c])=>`<option value="${k}">${c.label}</option>`).join('')}
+          </select>
+          <button class="action-btn del sel-toggle" id="sel-${key}-${idx}" onclick="toggleSel('${key}',${idx},this)" title="Select to delete">✕</button>
         </td>
       </tr>`;
     }).join('');
@@ -1496,6 +1515,14 @@ function addItem(key){
 function removeItem(key,idx){
   if(!confirm(`Remove "${gearData[key].items[idx].name}"?`))return;
   gearData[key].items.splice(idx,1);
+  renderGear();updateCalc();scheduleAutoSave();
+}
+
+function moveItem(fromKey,idx,select){
+  const toKey=select.value;
+  if(!toKey){return;}
+  const item=gearData[fromKey].items.splice(idx,1)[0];
+  gearData[toKey].items.push(item);
   renderGear();updateCalc();scheduleAutoSave();
 }
 
@@ -1652,8 +1679,13 @@ function getWaterOzForDay(day){
 function getPackOzForDay(day){
   try {
     var base = overrideOz!==null ? safeFloat(overrideOz,0) : totalOzActive();
-    var crewSize = Math.max(1, safeInt(trekConfig.crewSize, 8));
-    var crewShare = safeFloat(trekConfig.crewGearOz, 0) / crewSize;
+    var ownTent = document.getElementById('own-tent')&&document.getElementById('own-tent').checked;
+    var adults=Math.max(1,safeInt((getEl('crew-adults')||{value:3}).value,3));
+    var scouts=Math.max(1,safeInt((getEl('crew-scouts')||{value:5}).value,5));
+    var crewSize=adults+scouts;
+    var tentShareOz=tentOz();
+    var nonTentOz=safeFloat(trekConfig.crewGearOz,0)-tentShareOz;
+    var crewShare=ownTent?(nonTentOz/crewSize):(nonTentOz/crewSize+tentShareOz/scouts);
     var food = getFoodOzForDay(day);
     var water = getWaterOzForDay(day);
     var total = base + crewShare + food + water;
@@ -1665,7 +1697,10 @@ function updateCalc(){
   try {
   trekConfig.days=Math.max(7,Math.min(12,safeInt(getVal('trek-days',12),12)));
   trekConfig.crewSize=Math.max(1,Math.min(12,safeInt(getVal('crew-size',8),8)));
-  trekConfig.crewGearOz=Math.max(0,safeFloat(getVal('crew-gear-oz',373),373));
+  // Sync crew gear total from live crewGearData (field may be manually overridden)
+  const liveCrewOz=crewTotalOz();
+  if(liveCrewOz>0){const cgEl=document.getElementById('crew-gear-oz');if(cgEl)cgEl.value=Math.round(liveCrewOz);}
+  trekConfig.crewGearOz=Math.max(0,safeFloat(getVal('crew-gear-oz',0),0));
   trekConfig.bodyWeight=Math.max(50,safeFloat(getVal('body-weight',175),175));
   const sStr=getVal('staff-days','')||'';
   trekConfig.staffDays=sStr.split(',').map(function(s){return safeInt(s.trim(),NaN);}).filter(function(n){return !isNaN(n);});
@@ -1687,7 +1722,14 @@ function onDaySlider(day){
   document.getElementById('result-date').textContent=`· ${formatDate(d)}`;
 
   const baseOz=overrideOz!==null?overrideOz:totalOzActive();
-  const crewOz=trekConfig.crewGearOz/trekConfig.crewSize;
+  const ownTent=document.getElementById('own-tent')&&document.getElementById('own-tent').checked;
+  const _adults=Math.max(1,safeInt((getEl('crew-adults')||{value:3}).value,3));
+  const _scouts=Math.max(1,safeInt((getEl('crew-scouts')||{value:5}).value,5));
+  const _crewSize=_adults+_scouts;
+  const _tentOz=tentOz();
+  const _nonTentOz=trekConfig.crewGearOz-_tentOz;
+  const crewOz=ownTent?(_nonTentOz/_crewSize):(_nonTentOz/_crewSize+_tentOz/_scouts);
+  const crewShareLabel=ownTent?'Crew share (own tent)':'Crew share (scout)';
   const foodOz=getFoodOzForDay(day);
   const waterOz=getWaterOzForDay(day);
   const packOz=baseOz+crewOz+foodOz+waterOz;
@@ -1697,7 +1739,7 @@ function onDaySlider(day){
 
   document.getElementById('weight-breakdown').innerHTML=`
     <div class="wb-row"><span class="wb-label">Personal gear (base)</span><span class="wb-val">${ozToStr(baseOz)}</span></div>
-    <div class="wb-row"><span class="wb-label">Crew gear share (÷${trekConfig.crewSize})</span><span class="wb-val">${ozToStr(crewOz)}</span></div>
+    <div class="wb-row"><span class="wb-label">${crewShareLabel}</span><span class="wb-val">${ozToStr(crewOz)}</span></div>
     <div class="wb-row"><span class="wb-label">Food ${isR?'· resupply day':''}</span><span class="wb-val">${ozToStr(foodOz)}</span></div>
     <div class="wb-row"><span class="wb-label">Water ${isDry?'· dry camp 7L':'· standard 3.5L'}</span><span class="wb-val">${ozToStr(waterOz)}</span></div>
     <div class="wb-row total"><span class="wb-label">Total Pack Weight</span><span class="wb-val">${ozToStr(packOz)}</span></div>`;
@@ -1705,7 +1747,7 @@ function onDaySlider(day){
   const bwPct2=Math.min(100,(bwPct/40)*100);
   const bwG=document.getElementById('bw-gauge');
   bwG.style.width=bwPct2+'%';
-  bwG.style.background=bwPct<=25?'var(--green)':bwPct<=30?'var(--warn)':'var(--red)';
+  bwG.style.background=bwPct>30?'var(--red)':'var(--green)';
   document.getElementById('bw-note').textContent=`${bwPct}% of body weight — Philmont recommends max 25–30%`;
 
   const allW=Array.from({length:trekConfig.days},(_,i)=>getPackOzForDay(i+1));
@@ -2535,8 +2577,13 @@ window.onload=()=>{
   window.addEventListener('beforeunload', saveLocal);
 };
 
+function toggleSel(key,idx,btn){
+  btn.classList.toggle('sel-active');
+  updateBatchBar();
+}
+
 function updateBatchBar(){
-  const sel=document.querySelectorAll('#gear-sections .sel-check:checked');
+  const sel=document.querySelectorAll('#gear-sections .sel-toggle.sel-active');
   const bar=document.getElementById('batch-bar');
   if(!bar)return;
   bar.style.display=sel.length?'flex':'none';
@@ -2544,12 +2591,11 @@ function updateBatchBar(){
 }
 
 function batchDelete(){
-  const sel=[...document.querySelectorAll('#gear-sections .sel-check:checked')];
+  const sel=[...document.querySelectorAll('#gear-sections .sel-toggle.sel-active')];
   if(!sel.length)return;
   if(!confirm(`Delete ${sel.length} selected item${sel.length!==1?'s':''}?`))return;
-  // Collect {key,idx} pairs, sort descending so splice doesn't shift indices
-  const pairs=sel.map(cb=>{
-    const row=cb.closest('tr');
+  const pairs=sel.map(btn=>{
+    const row=btn.closest('tr');
     return{key:row.dataset.key,idx:parseInt(row.dataset.idx)};
   }).sort((a,b)=>b.idx-a.idx);
   pairs.forEach(({key,idx})=>gearData[key].items.splice(idx,1));
@@ -2558,7 +2604,7 @@ function batchDelete(){
 }
 
 function clearBatchSelection(){
-  document.querySelectorAll('#gear-sections .sel-check:checked').forEach(cb=>cb.checked=false);
+  document.querySelectorAll('#gear-sections .sel-toggle.sel-active').forEach(b=>b.classList.remove('sel-active'));
   updateBatchBar();
 }
 </script>
