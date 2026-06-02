@@ -2521,9 +2521,8 @@ function updateBatchBar(){
   const sel=document.querySelectorAll('#gear-sections .sel-check:checked');
   const bar=document.getElementById('batch-bar');
   if(!bar)return;
-  if(sel.length===0){bar.classList.add('hidden');return;}
-  bar.classList.remove('hidden');
-  document.getElementById('batch-count').textContent=sel.length+' item'+(sel.length!==1?'s':'')+' selected';
+  bar.style.display=sel.length?'flex':'none';
+  if(sel.length)document.getElementById('batch-count').textContent=sel.length+' item'+(sel.length!==1?'s':'')+' selected';
 }
 
 function batchDelete(){
@@ -2537,7 +2536,7 @@ function batchDelete(){
   }).sort((a,b)=>b.idx-a.idx);
   pairs.forEach(({key,idx})=>gearData[key].items.splice(idx,1));
   saveLocal();renderGear();updateCalc();
-  document.getElementById('batch-bar').classList.add('hidden');
+  document.getElementById('batch-bar').style.display='none';
 }
 
 function clearBatchSelection(){
@@ -2546,7 +2545,7 @@ function clearBatchSelection(){
 }
 </script>
 
-<div id="batch-bar" class="hidden" style="position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);
+<div id="batch-bar" style="display:none;position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);
   background:var(--pc-anchor);color:#f4ecd8;border-radius:8px;padding:0.65rem 1.2rem;
   align-items:center;gap:1rem;box-shadow:0 4px 20px rgba(0,0,0,.35);z-index:500;">
   <span id="batch-count" style="font-family:'JetBrains Mono',monospace;font-size:0.82rem;"></span>
