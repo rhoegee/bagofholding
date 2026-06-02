@@ -13,6 +13,7 @@
 <script src="https://cdn.jsdelivr.net/npm/lz-string@1.5.0/libs/lz-string.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
 <link rel="stylesheet" href="packcheck-theme.css">
+<script src="help-content.js"></script>
 <style id="pc-tweak-styles">
 /* ── Header treatment: reversed cream bar ── */
 body[data-nav="cream"] nav{background:var(--pc-cream);border-bottom:1px solid var(--pc-line-2);}
@@ -2716,7 +2717,17 @@ function showSendToPhone(){
   document.getElementById('qr-modal').style.display='flex';
 }
 function closeQRModal(){document.getElementById('qr-modal').style.display='none';}
-function showHelpModal(){document.getElementById('help-modal').style.display='flex';}
+function showHelpModal(){
+  const body=document.getElementById('help-body');
+  if(body&&!body.innerHTML){
+    const H='font-family:var(--font-disp);font-size:.75rem;text-transform:uppercase;letter-spacing:.1em;color:var(--pc-accent);margin:1.25rem 0 .5rem;';
+    body.innerHTML=HELP_CONTENT.map(s=>
+      `<h3 style="${H}">${s.title}</h3>`+
+      s.items.map(i=>`<p><strong>${i.q}</strong><br>${i.a}</p>`).join('')
+    ).join('');
+  }
+  document.getElementById('help-modal').style.display='flex';
+}
 function closeHelpModal(){document.getElementById('help-modal').style.display='none';}
 function copyQRUrl(e){
   const inp=document.getElementById('qr-url-input');
@@ -2778,49 +2789,7 @@ function clearBatchSelection(){
       <span>User Guide</span>
       <button onclick="closeHelpModal()" style="background:none;border:none;font-size:1.4rem;cursor:pointer;color:var(--pc-ink-soft);line-height:1;">&times;</button>
     </div>
-    <div style="font-size:.88rem;line-height:1.6;color:var(--pc-ink);">
-
-      <h3 style="font-family:var(--font-disp);font-size:.75rem;text-transform:uppercase;letter-spacing:.1em;color:var(--pc-accent);margin:1.25rem 0 .5rem;">Getting Started</h3>
-      <p><strong>What is this app?</strong><br>Packcheck: Philmont Edition is a pack weight planner built for Philmont treks. Add your gear, check what you're bringing, and see your total weight before you leave home.</p>
-      <p><strong>Do I need to make an account?</strong><br>No. Everything saves automatically in your browser. Nothing is sent to a server.</p>
-      <p><strong>Will my data disappear if I close the tab?</strong><br>No. Your gear list saves automatically every time you make a change. It will be there when you come back — on the same device and browser.</p>
-      <p><strong>How do I start?</strong><br>Tap your name in the header to set up your profile. Enter your name, crew number, and trek info. Then go to the Gear List tab and start checking items.</p>
-
-      <h3 style="font-family:var(--font-disp);font-size:.75rem;text-transform:uppercase;letter-spacing:.1em;color:var(--pc-accent);margin:1.25rem 0 .5rem;">Using the Gear List</h3>
-      <p><strong>How do I check an item as packed?</strong><br>Tap the checkbox on the left side of any item. Checked items count toward your pack weight. Unchecked items are grayed out.</p>
-      <p><strong>How do I check everything at once?</strong><br>Use the "Select / Deselect All" checkbox at the top of the gear list. One click checks everything. Click again to clear everything.</p>
-      <p><strong>How do I edit an item?</strong><br>On desktop, double-click the row. On mobile, press and hold the row for about half a second.</p>
-      <p><strong>How do I add a new item?</strong><br>Click the <strong>+ Add Item</strong> button at the bottom of any gear category.</p>
-      <p><strong>Can I move an item to a different category?</strong><br>Yes. In the actions column, use the ↕ icon to reassign an item to a different category.</p>
-      <p><strong>What does the cotton warning mean?</strong><br>Philmont does not recommend cotton on trail. Items flagged with a cotton warning will show a yellow caution icon. Cotton absorbs moisture and doesn't dry out. On trail, that becomes a safety issue.</p>
-
-      <h3 style="font-family:var(--font-disp);font-size:.75rem;text-transform:uppercase;letter-spacing:.1em;color:var(--pc-accent);margin:1.25rem 0 .5rem;">Understanding Your Weight</h3>
-      <p><strong>What is base weight?</strong><br>Base weight is everything in your pack except food, water, and fuel. It's the weight you carry every day of the trek.</p>
-      <p><strong>What is trail weight?</strong><br>Trail weight is your base weight plus food, water, and fuel. This is what your pack actually weighs when you walk out of camp in the morning.</p>
-      <p><strong>What is the pack weight limit at Philmont?</strong><br>Philmont recommends your trail weight stay under 25–30% of your body weight. The Pack Weight tab calculates this for you based on your body weight and shows where you land each day.</p>
-      <p><strong>Do I really have to weigh every single item?</strong><br>No. You can always weigh your entire pack and use that number for your base weight. But to really take advantage of the app and optimize your load, knowing where every ounce goes can make a big difference. Remember: you pack it, you carry it.</p>
-      <p><strong>Why does my weight change between days?</strong><br>Food and water. The Pack Weight tab simulates your weight day by day as you consume food and hit water sources. Dry camp days will be heavier because you carry more water.</p>
-
-      <h3 style="font-family:var(--font-disp);font-size:.75rem;text-transform:uppercase;letter-spacing:.1em;color:var(--pc-accent);margin:1.25rem 0 .5rem;">Sharing and Syncing</h3>
-      <p><strong>How do I get my list onto my phone?</strong><br>On desktop, open the menu (☰) and tap <strong>Share / QR Code</strong>. Scan the code with your phone camera. It opens your gear list in the phone's browser automatically.</p>
-      <p><strong>How do I save my list as a file?</strong><br>Tap the red <strong>Save</strong> button in the header. This downloads a <code>.json</code> file you can reload anytime.</p>
-      <p><strong>How do I load a saved list?</strong><br>Open the menu (☰) and tap <strong>Load</strong>. Select your <code>.json</code> file.</p>
-      <p><strong>Can I share my list with my crew leader?</strong><br>Yes. Save the file and send it — email, text, AirDrop, whatever works. They can load it with the Load option in the menu.</p>
-
-      <h3 style="font-family:var(--font-disp);font-size:.75rem;text-transform:uppercase;letter-spacing:.1em;color:var(--pc-accent);margin:1.25rem 0 .5rem;">Crew Gear</h3>
-      <p><strong>What is crew gear?</strong><br>Crew gear is equipment shared across the whole crew — tents, crew cook sets, bear bags, etc. Packcheck divides the weight equally per person so you can see your true share.</p>
-      <p><strong>Can I edit the crew gear?</strong><br>Yes. Go to the Crew Gear tab and edit items the same way as personal gear.</p>
-
-      <h3 style="font-family:var(--font-disp);font-size:.75rem;text-transform:uppercase;letter-spacing:.1em;color:var(--pc-accent);margin:1.25rem 0 .5rem;">Itinerary and Menus</h3>
-      <p><strong>How does the itinerary work?</strong><br>The Itinerary tab shows your trek day by day — camps, miles, elevation, and difficulty. It's pre-loaded for Trek 12-10.</p>
-      <p><strong>What about meals?</strong><br>Each itinerary day shows the meal rotation for that day. The menu cycles through Philmont's standard 10-meal rotation.</p>
-
-      <h3 style="font-family:var(--font-disp);font-size:.75rem;text-transform:uppercase;letter-spacing:.1em;color:var(--pc-accent);margin:1.25rem 0 .5rem;">Misc</h3>
-      <p><strong>How do I print a checklist?</strong><br>Open the menu (☰) and tap <strong>Print</strong>.</p>
-      <p><strong>How do I export to Excel?</strong><br>Open the menu (☰) and tap <strong>Export Excel</strong>.</p>
-      <p><strong>Something isn't working. Who do I contact?</strong><br>Send a note to <a href="mailto:packcheck.app@gmail.com" style="color:var(--pc-accent);">packcheck.app@gmail.com</a>.</p>
-
-    </div>
+    <div id="help-body" style="font-size:.88rem;line-height:1.6;color:var(--pc-ink);"></div>
   </div>
 </div>
 
