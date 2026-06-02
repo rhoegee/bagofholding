@@ -10,6 +10,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Zilla+Slab:ital,wght@0,400;0,500;0,600;1,400;1,500&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lz-string@1.5.0/libs/lz-string.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
 <link rel="stylesheet" href="packcheck-theme.css">
 <style id="pc-tweak-styles">
 /* ── Header treatment: reversed cream bar ── */
@@ -315,6 +317,20 @@ body[data-gear-layout="cards"] .gear-table tr.edit-row td{display:table-cell;}
     <button class="theme-toggle" id="theme-toggle" onclick="toggleTheme()" title="Toggle Pine-dark mode" aria-label="Toggle dark mode">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" id="theme-icon"></svg>
     </button>
+    <div style="position:relative;">
+      <button class="theme-toggle hamburger-btn" id="hamburger-btn" onclick="toggleHamburger()" title="Menu" aria-label="Menu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+      <div class="hamburger-menu" id="hamburger-menu" style="display:none;">
+        <button class="ham-item" onclick="saveJSON();closeHamburger()">💾 Save</button>
+        <button class="ham-item" onclick="document.getElementById('json-load').click();closeHamburger()">📂 Load</button>
+        <button class="ham-item" onclick="document.getElementById('csv-load').click();closeHamburger()">📥 Import CSV</button>
+        <button class="ham-item" onclick="exportExcel();closeHamburger()">📊 Export Excel</button>
+        <button class="ham-item" onclick="printChecklist();closeHamburger()">🖨 Print</button>
+        <div class="ham-divider"></div>
+        <button class="ham-item" onclick="showSendToPhone();closeHamburger()">📱 Send to Phone</button>
+      </div>
+    </div>
     <div class="nav-actions">
       <button class="nav-btn primary" onclick="saveJSON()" title="Save gear list to file">Save</button>
       <button class="nav-btn" onclick="document.getElementById('json-load').click()" title="Load a previously saved file">Load</button>
@@ -1393,7 +1409,7 @@ function renderGear(){
       const isChecked=item.included===true;
       const isCotton=item.warn==='cotton'||/\bcotton\b/i.test(item.name);
       const cottonFlag=isCotton?`<span class="cotton-warn">cotton</span>`:'';
-      return `<tr class="data-row ${isChecked?'':'unchecked'}" ondblclick="startEdit('${key}',${idx})" data-key="${key}" data-idx="${idx}">
+      return `<tr class="data-row ${isChecked?'':'unchecked'}" ondblclick="startEdit('${key}',${idx})" ontouchstart="rowTouchStart(event,'${key}',${idx})" ontouchend="rowTouchEnd()" ontouchmove="rowTouchMove()" data-key="${key}" data-idx="${idx}">
         <td style="width:24px;text-align:center;padding:0.45rem 2px;">
           <input type="checkbox" class="item-check" ${isChecked?'checked':''} onchange="toggleItem('${key}',${idx},this.checked)" onclick="event.stopPropagation()">
         </td>
@@ -2565,6 +2581,19 @@ window.onload=()=>{
   try{initTheme();}catch(e){console.error('initTheme error:',e);}
   try{if(window.PCWordmark)PCWordmark.render();}catch(e){console.error('wordmark error:',e);}
   const hasSaved = loadLocal();
+  try{
+    const _gParam=new URLSearchParams(location.search).get('g');
+    if(_gParam){
+      const imported=JSON.parse(LZString.decompressFromEncodedURIComponent(_gParam));
+      if(imported&&imported.gearData&&confirm('Import shared gear list?\n\nThis will replace your current list.')){
+        Object.assign(gearData,imported.gearData);
+        if(imported.profile)Object.assign(profile,imported.profile);
+        if(imported.trekConfig)Object.assign(trekConfig,imported.trekConfig);
+        saveLocal();
+      }
+      history.replaceState({},'',location.pathname);
+    }
+  }catch(e){console.warn('URL import failed',e);}
   try{renderGear();}catch(e){console.error('renderGear error:',e);}
   try{renderCrewGear();}catch(e){console.error('renderCrewGear error:',e);}
   try{renderProfileCard();}catch(e){console.error('renderProfileCard error:',e);}
@@ -2576,6 +2605,64 @@ window.onload=()=>{
   if(!hasSaved) fetchPersonalDefaults();
   window.addEventListener('beforeunload', saveLocal);
 };
+
+/* ── Hamburger menu ── */
+function toggleHamburger(){
+  const m=document.getElementById('hamburger-menu');
+  m.style.display=m.style.display==='none'?'block':'none';
+}
+function closeHamburger(){
+  const m=document.getElementById('hamburger-menu');
+  if(m)m.style.display='none';
+}
+document.addEventListener('click',function(e){
+  const btn=document.getElementById('hamburger-btn');
+  const menu=document.getElementById('hamburger-menu');
+  if(btn&&menu&&!btn.contains(e.target)&&!menu.contains(e.target))menu.style.display='none';
+});
+
+/* ── Long-press to edit ── */
+let _lpTimer=null,_lpMoved=false;
+function rowTouchStart(e,key,idx){
+  _lpMoved=false;
+  _lpTimer=setTimeout(()=>{
+    if(_lpMoved)return;
+    const row=e.currentTarget||e.target.closest('tr');
+    if(row){row.classList.add('lp-flash');setTimeout(()=>row.classList.remove('lp-flash'),300);}
+    startEdit(key,idx);
+  },500);
+}
+function rowTouchEnd(){clearTimeout(_lpTimer);}
+function rowTouchMove(){_lpMoved=true;clearTimeout(_lpTimer);}
+
+/* ── Send to Phone / QR ── */
+function showSendToPhone(){
+  const payload=JSON.stringify({gearData,profile,trekConfig});
+  let compressed;
+  try{compressed=LZString.compressToEncodedURIComponent(payload);}
+  catch(e){document.getElementById('qr-error').textContent='Compression failed.';document.getElementById('qr-error').style.display='block';}
+  const url=location.origin+location.pathname+'?g='+compressed;
+  document.getElementById('qr-url-input').value=url;
+  const wrap=document.getElementById('qr-canvas-wrap');
+  wrap.innerHTML='';
+  const errEl=document.getElementById('qr-error');
+  if(url.length>4096){
+    errEl.style.display='block';
+    errEl.textContent='Gear list too large for QR ('+Math.round(url.length/1024)+'KB). Copy the link and open it on your phone.';
+  } else {
+    errEl.style.display='none';
+    try{new QRCode(wrap,{text:url,width:240,height:240,correctLevel:QRCode.CorrectLevel.M});}
+    catch(e){errEl.style.display='block';errEl.textContent='QR generation failed — use the link below.';}
+  }
+  document.getElementById('qr-modal').style.display='flex';
+}
+function closeQRModal(){document.getElementById('qr-modal').style.display='none';}
+function copyQRUrl(e){
+  const inp=document.getElementById('qr-url-input');
+  inp.select();
+  try{navigator.clipboard.writeText(inp.value);}catch(_){document.execCommand('copy');}
+  const btn=e.target;const orig=btn.textContent;btn.textContent='Copied!';setTimeout(()=>btn.textContent=orig,1500);
+}
 
 function toggleSel(key,idx,btn){
   btn.classList.toggle('sel-active');
@@ -2621,6 +2708,23 @@ function clearBatchSelection(){
     border-radius:5px;padding:0.35rem 0.7rem;font-family:var(--font-body);font-size:0.82rem;cursor:pointer;">
     Cancel
   </button>
+</div>
+
+<!-- QR / Send to Phone modal -->
+<div id="qr-modal" class="modal-overlay" style="display:none;" onclick="if(event.target===this)closeQRModal()">
+  <div class="modal" style="text-align:center;max-width:320px;">
+    <div class="modal-title">Send to Phone</div>
+    <p style="font-size:.85rem;color:var(--pc-ink-soft);margin:.25rem 0 1rem;">Scan with your phone camera to open your gear list on another device.</p>
+    <div id="qr-canvas-wrap" style="display:flex;justify-content:center;margin:.5rem 0;min-height:60px;"></div>
+    <div id="qr-error" style="display:none;font-size:.82rem;color:var(--red);margin:.5rem 0;"></div>
+    <div style="margin:.75rem 0;">
+      <input id="qr-url-input" type="text" readonly style="width:100%;font-size:.65rem;padding:.45rem .6rem;border:1px solid var(--pc-line);border-radius:4px;background:var(--pc-bg);color:var(--pc-ink-soft);box-sizing:border-box;">
+    </div>
+    <div class="modal-actions">
+      <button class="modal-btn" onclick="copyQRUrl(event)">Copy Link</button>
+      <button class="modal-btn primary" onclick="closeQRModal()">Done</button>
+    </div>
+  </div>
 </div>
 </body>
 </html>

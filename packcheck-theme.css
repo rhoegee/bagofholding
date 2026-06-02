@@ -459,6 +459,25 @@ input[type=range]{flex:1;accent-color:var(--pc-accent);}
 .rules-card ul li{padding-left:.65rem;position:relative;}
 .rules-card ul li::before{content:'—';position:absolute;left:0;color:var(--pc-trim);}
 
+/* ── HAMBURGER MENU ─────────────────────────────────── */
+.hamburger-btn{display:none;}
+.hamburger-btn svg{width:18px;height:18px;display:block;}
+.hamburger-menu{position:absolute;top:calc(100% + 4px);right:0;
+  background:var(--pc-anchor);border:1px solid rgba(244,236,216,.22);
+  border-radius:6px;box-shadow:0 4px 20px rgba(0,0,0,.35);z-index:300;
+  min-width:170px;padding:.3rem 0;}
+.ham-item{display:block;width:100%;text-align:left;padding:.58rem 1rem;
+  font-family:var(--font-disp);font-size:.74rem;font-weight:600;
+  text-transform:uppercase;letter-spacing:.06em;color:var(--pc-cream);
+  background:none;border:none;cursor:pointer;white-space:nowrap;}
+.ham-item:hover{background:rgba(244,236,216,.1);}
+.ham-divider{height:1px;background:rgba(244,236,216,.15);margin:.3rem 0;}
+@media(max-width:1024px){.hamburger-btn{display:flex;}}
+
+/* Long-press flash feedback */
+@keyframes lp-flash{0%{opacity:1;}40%{opacity:.5;}100%{opacity:1;}}
+.lp-flash{animation:lp-flash .3s ease;}
+
 /* ── UTIL ──────────────────────────────────────────── */
 @media(max-width:1024px){.hide-sm{display:none!important;}.two-col{grid-template-columns:1fr;}
   .calc-grid,.wb-grid,.rules-grid{grid-template-columns:1fr;}
