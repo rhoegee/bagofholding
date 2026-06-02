@@ -1199,7 +1199,7 @@ function renderCrewGear(){
           <td><input class="edit-input narrow" id="cei-qty" type="number" value="${item.qty}" oninput="updateCrewEditTotal()"></td>
           <td>
             <input class="edit-input narrow" id="cei-oz" type="number" step="0.1" value="${unitWt.toFixed(1)}" oninput="this.value=this.value.replace(/[^0-9.]/g,'');updateCrewEditTotal();" placeholder="oz">
-            <div style="font-family:'JetBrains Mono',monospace;font-size:0.55rem;color:var(--muted);margin-top:2px;">unit · total: <span id="crew-edit-total">${ozToStr(item.oz)}</span></div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:0.55rem;color:var(--muted);margin-top:2px;white-space:nowrap;overflow:hidden;">= <span id="crew-edit-total">${ozToStr(item.oz)}</span></div>
           </td>
           <td><input class="edit-input wide" id="cei-notes" value="${item.notes||''}"></td>
           <td class="td-actions">
@@ -1240,10 +1240,10 @@ function renderCrewGear(){
         <table class="gear-table">
           <colgroup>
             <col style="width:24px">
-            <col style="width:220px">
-            <col style="width:110px">
+            <col style="width:260px">
+            <col style="width:140px">
             <col style="width:26px">
-            <col style="width:80px">
+            <col style="width:72px">
             <col>
             <col style="width:40px">
           </colgroup>
@@ -1365,7 +1365,7 @@ function renderGear(){
           <td><input class="edit-input narrow" id="ei-qty" type="number" value="${item.qty}" oninput="updateEditTotal()"></td>
           <td>
             <input class="edit-input narrow" id="ei-oz" type="number" step="0.1" value="${unitWt.toFixed(1)}" oninput="this.value=this.value.replace(/[^0-9.]/g,'');updateEditTotal();" placeholder="oz">
-            <div style="font-family:'JetBrains Mono',monospace;font-size:0.55rem;color:var(--muted);margin-top:2px;">unit wt · total: <span id="edit-total">${ozToStr(item.oz)}</span></div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:0.55rem;color:var(--muted);margin-top:2px;white-space:nowrap;overflow:hidden;">= <span id="edit-total">${ozToStr(item.oz)}</span></div>
           </td>
           <td><input class="edit-input wide" id="ei-notes" value="${item.notes||''}"></td>
           <td class="td-actions">
@@ -1407,10 +1407,10 @@ function renderGear(){
         <table class="gear-table">
           <colgroup>
             <col style="width:24px">
-            <col style="width:220px">
-            <col style="width:110px">
+            <col style="width:260px">
+            <col style="width:140px">
             <col style="width:26px">
-            <col style="width:80px">
+            <col style="width:72px">
             <col>
             <col style="width:40px">
           </colgroup>

@@ -282,9 +282,10 @@ nav{position:sticky;top:0;z-index:100;background:var(--pc-anchor);
 
 /* ── INLINE EDIT ───────────────────────────────────── */
 .edit-input{background:var(--pc-surface);border:1px solid var(--pc-accent);color:var(--pc-ink);
-  font-family:var(--font-body);font-size:.88rem;padding:.28rem .45rem;border-radius:4px;outline:none;width:100%;}
-.edit-input.narrow{width:60px;}
-.edit-input.med{width:90px;}
+  font-family:var(--font-body);font-size:.88rem;padding:.28rem .45rem;border-radius:4px;outline:none;
+  width:100%;box-sizing:border-box;min-width:0;}
+/* narrow/med/wide — no longer set fixed widths; all inputs fill their column */
+.edit-input.narrow,.edit-input.med,.edit-input.wide{width:100%;}
 
 /* ── ADD ROW ───────────────────────────────────────── */
 .add-row{display:flex;gap:.45rem;padding:.65rem .85rem;background:var(--pc-bg);border-top:1px solid var(--pc-line);}
