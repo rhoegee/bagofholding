@@ -252,8 +252,8 @@ body[data-gear-layout="cards"] .gear-table tr.edit-row td{display:table-cell;}
   <div class="profile-card" id="crew-profile-card">
     <div style="flex:1;">
       <div class="hero-eyebrow">Shared Equipment · Split Among Crew</div>
-      <div class="hero-title" style="font-size:1.4rem;margin:0.1rem 0 0.15rem;">Crew <span>Gear</span></div>
-      <div class="hero-sub" style="font-size:0.78rem;margin:0;">Philmont-issued and crew-provided shared equipment. Weight split per person feeds into the Pack Weight calculator.</div>
+      <div class="hero-title">Crew <span>Gear</span></div>
+      <div class="hero-sub">Philmont-issued and crew-provided shared equipment. Weight split per person feeds into the Pack Weight calculator.</div>
       <div id="crew-sync-status" style="font-family:'JetBrains Mono',monospace;font-size:0.62rem;color:var(--muted);margin-top:0.25rem;"></div>
     </div>
     <div style="text-align:right;">
@@ -1217,6 +1217,7 @@ function renderGear(){
       if(editingRow&&editingRow.key===key&&editingRow.idx===idx){
         const unitWt=item.unitOz||item.oz;
       return `<tr class="edit-row">
+          <td></td>
           <td><input class="edit-input wide" id="ei-name" value="${item.name}"></td>
           <td><input class="edit-input med" id="ei-brand" value="${item.brand}"></td>
           <td><input class="edit-input narrow" id="ei-qty" type="number" value="${item.qty}" oninput="updateEditTotal()"></td>
