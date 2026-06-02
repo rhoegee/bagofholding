@@ -11,7 +11,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/lz-string@1.5.0/libs/lz-string.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.4/build/qrcode.min.js"></script>
 <link rel="stylesheet" href="packcheck-theme.css">
 <style id="pc-tweak-styles">
 /* ── Header treatment: reversed cream bar ── */
@@ -328,7 +327,7 @@ body[data-gear-layout="cards"] .gear-table tr.edit-row td{display:table-cell;}
         <button class="ham-item" onclick="exportExcel();closeHamburger()">📊 Export Excel</button>
         <button class="ham-item" onclick="printChecklist();closeHamburger()">🖨 Print</button>
         <div class="ham-divider"></div>
-        <button class="ham-item" onclick="showSendToPhone();closeHamburger()">📱 Send to Phone</button>
+        <button class="ham-item" onclick="showSendToPhone();closeHamburger()">▦ Share / QR Code</button>
       </div>
     </div>
     <div class="nav-actions">
@@ -339,7 +338,7 @@ body[data-gear-layout="cards"] .gear-table tr.edit-row td{display:table-cell;}
       <input type="file" id="csv-load" accept=".csv" style="display:none" onchange="loadCSV(event)">
       <button class="nav-btn" onclick="exportExcel()" title="Export to Excel">Excel</button>
       <button class="nav-btn" onclick="printChecklist()" title="Print gear checklist">Print</button>
-      <button class="nav-btn" onclick="showSendToPhone()" title="Send gear list to phone via QR code">📱</button>
+      <button class="nav-btn" onclick="showSendToPhone()" title="Send gear list to phone via QR code">Share ▦</button>
     </div>
   </div>
 </nav>
@@ -2585,11 +2584,10 @@ window.onload=()=>{
   try{
     const _gParam=new URLSearchParams(location.search).get('g');
     if(_gParam){
-      const imported=JSON.parse(LZString.decompressFromEncodedURIComponent(_gParam));
-      if(imported&&imported.gearData&&confirm('Import shared gear list?\n\nThis will replace your current list.')){
-        Object.assign(gearData,imported.gearData);
-        if(imported.profile)Object.assign(profile,imported.profile);
-        if(imported.trekConfig)Object.assign(trekConfig,imported.trekConfig);
+      const data=JSON.parse(LZString.decompressFromEncodedURIComponent(_gParam));
+      if(data&&confirm('Import shared gear list?\n\nThis will replace your current list.')){
+        if(data.v===1)unpackGear(data);
+        else{if(data.gearData)Object.assign(gearData,data.gearData);if(data.profile)Object.assign(profile,data.profile);if(data.trekConfig)Object.assign(trekConfig,data.trekConfig);}
         saveLocal();
       }
       history.replaceState({},'',location.pathname);
@@ -2637,27 +2635,64 @@ function rowTouchEnd(){clearTimeout(_lpTimer);}
 function rowTouchMove(){_lpMoved=true;clearTimeout(_lpTimer);}
 
 /* ── Send to Phone / QR ── */
-function showSendToPhone(){
-  const payload=JSON.stringify({gearData,profile,trekConfig});
-  let compressed;
-  try{compressed=LZString.compressToEncodedURIComponent(payload);}
-  catch(e){document.getElementById('qr-error').textContent='Compression failed.';document.getElementById('qr-error').style.display='block';}
-  const url=location.origin+location.pathname+'?g='+compressed;
-  document.getElementById('qr-url-input').value=url;
-  const wrap=document.getElementById('qr-canvas-wrap');
-  wrap.innerHTML='';
-  const errEl=document.getElementById('qr-error');
-  if(url.length>4096){
-    errEl.style.display='block';
-    errEl.textContent='Gear list too large for QR ('+Math.round(url.length/1024)+'KB). Copy the link and open it on your phone.';
-  } else {
-    errEl.style.display='none';
-    const canvas=document.createElement('canvas');
-    wrap.appendChild(canvas);
-    QRCode.toCanvas(canvas,url,{width:240,errorCorrectionLevel:'M'},function(err){
-      if(err){errEl.style.display='block';errEl.textContent='QR generation failed — use the link below.';}
+function packGear(){
+  // Compact serialization: short keys, omit empty/default fields
+  const g={};
+  for(const[k,cat]of Object.entries(gearData)){
+    g[k]=cat.items.map(i=>{
+      const e={n:i.name};
+      if(i.brand)e.b=i.brand;
+      if(i.oz)e.o=+(parseFloat(i.oz)||0).toFixed(1);
+      if(i.qty&&i.qty!==1)e.q=i.qty;
+      if(i.notes)e.t=i.notes;
+      if(i.checked===false||i.checked===0)e.u=1;
+      if(i.warn)e.w=i.warn;
+      return e;
     });
   }
+  const p={};
+  if(profile.name)p.n=profile.name;
+  if(profile.crewNumber)p.c=profile.crewNumber;
+  if(profile.troop)p.t=profile.troop;
+  if(profile.arrival)p.a=profile.arrival;
+  if(profile.trekLength)p.l=profile.trekLength;
+  return JSON.stringify({v:1,p,g,tc:{d:trekConfig.days,cs:trekConfig.crewSize,cg:Math.round(trekConfig.crewGearOz),bw:trekConfig.bodyWeight}});
+}
+function unpackGear(data){
+  if(!data||!data.g)return;
+  for(const[k,items]of Object.entries(data.g)){
+    if(!gearData[k])continue;
+    gearData[k].items=items.map(i=>({name:i.n,brand:i.b||'',oz:i.o||0,qty:i.q||1,notes:i.t||'',checked:!i.u,warn:i.w||null}));
+  }
+  if(data.p){
+    if(data.p.n)profile.name=data.p.n;
+    if(data.p.c)profile.crewNumber=data.p.c;
+    if(data.p.t)profile.troop=data.p.t;
+    if(data.p.a)profile.arrival=data.p.a;
+    if(data.p.l)profile.trekLength=data.p.l;
+  }
+  if(data.tc){
+    if(data.tc.d)trekConfig.days=data.tc.d;
+    if(data.tc.cs)trekConfig.crewSize=data.tc.cs;
+    if(data.tc.cg)trekConfig.crewGearOz=data.tc.cg;
+    if(data.tc.bw)trekConfig.bodyWeight=data.tc.bw;
+  }
+}
+function showSendToPhone(){
+  const compact=packGear();
+  const compressed=LZString.compressToEncodedURIComponent(compact);
+  const shareUrl=location.origin+location.pathname+'?g='+compressed;
+  document.getElementById('qr-url-input').value=shareUrl;
+  const wrap=document.getElementById('qr-canvas-wrap');
+  const errEl=document.getElementById('qr-error');
+  wrap.innerHTML='';errEl.style.display='none';
+  // Use Google Charts API — no JS library needed, just an image URL
+  const img=document.createElement('img');
+  img.style.cssText='width:250px;height:250px;border-radius:6px;';
+  img.alt='QR Code';
+  img.onerror=()=>{wrap.innerHTML='';errEl.style.display='block';errEl.textContent='QR generation failed. Copy the link below and open it on your phone.';};
+  img.src='https://chart.googleapis.com/chart?chs=256x256&cht=qr&choe=UTF-8&chld=M|1&chl='+encodeURIComponent(shareUrl);
+  wrap.appendChild(img);
   document.getElementById('qr-modal').style.display='flex';
 }
 function closeQRModal(){document.getElementById('qr-modal').style.display='none';}
@@ -2717,8 +2752,8 @@ function clearBatchSelection(){
 <!-- QR / Send to Phone modal -->
 <div id="qr-modal" class="modal-overlay" style="display:none;" onclick="if(event.target===this)closeQRModal()">
   <div class="modal" style="text-align:center;max-width:320px;">
-    <div class="modal-title">Send to Phone</div>
-    <p style="font-size:.85rem;color:var(--pc-ink-soft);margin:.25rem 0 1rem;">Scan with your phone camera to open your gear list on another device.</p>
+    <div class="modal-title">Share Gear List</div>
+    <p style="font-size:.85rem;color:var(--pc-ink-soft);margin:.25rem 0 1rem;">Scan the QR code with any device camera to import this gear list, or copy the link and open it on another device.</p>
     <div id="qr-canvas-wrap" style="display:flex;justify-content:center;margin:.5rem 0;min-height:60px;"></div>
     <div id="qr-error" style="display:none;font-size:.82rem;color:var(--red);margin:.5rem 0;"></div>
     <div style="margin:.75rem 0;">

@@ -151,6 +151,7 @@ nav{position:sticky;top:0;z-index:100;background:var(--pc-anchor);
   font-family:var(--font-body);font-size:1rem;padding:.55rem .75rem;border-radius:4px;outline:none;}
 .modal-input:focus{border-color:var(--pc-accent);}
 .modal-row{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;}
+@media(max-width:540px){.modal-row{grid-template-columns:1fr;}}
 .modal-actions{display:flex;justify-content:flex-end;gap:.75rem;margin-top:1.5rem;}
 .btn{font-family:var(--font-disp);font-weight:600;font-size:.78rem;text-transform:uppercase;
   letter-spacing:.06em;padding:.6rem 1.4rem;border-radius:6px;cursor:pointer;transition:all .15s;border:1px solid transparent;}
