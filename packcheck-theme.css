@@ -70,7 +70,7 @@
 }
 
 *{box-sizing:border-box;margin:0;padding:0;}
-html{scroll-behavior:smooth;}
+html{scroll-behavior:smooth;overflow-x:hidden;}
 body{
   background-color:var(--pc-bg);color:var(--pc-ink);
   font-family:var(--font-body);font-weight:400;min-height:100vh;overflow-x:hidden;
@@ -265,7 +265,7 @@ nav{position:sticky;top:0;z-index:100;background:var(--pc-anchor);
   display:flex;align-items:center;gap:.85rem;}
 .progress-bar-track{flex:1;height:7px;background:var(--pc-canvas);border-radius:999px;overflow:hidden;}
 .progress-bar-fill{height:100%;border-radius:999px;background:var(--pc-accent);transition:width .4s ease;}
-.progress-label{font-family:var(--font-mono);font-size:.62rem;color:var(--pc-ink-soft);white-space:nowrap;}
+.progress-label{font-family:var(--font-mono);font-size:.62rem;color:var(--pc-ink-soft);}
 
 /* ── OVERRIDE BANNER ───────────────────────────────── */
 .override-banner{background:rgba(214,169,63,.12);border:1px solid rgba(214,169,63,.4);border-radius:6px;
@@ -461,7 +461,8 @@ input[type=range]{flex:1;accent-color:var(--pc-accent);}
 
 /* ── UTIL ──────────────────────────────────────────── */
 @media(max-width:860px){.hide-sm{display:none!important;}.two-col{grid-template-columns:1fr;}
-  .calc-grid,.wb-grid,.rules-grid{grid-template-columns:1fr;}}
+  .calc-grid,.wb-grid,.rules-grid{grid-template-columns:1fr;}
+  .nav-actions,.nav-total-label,.nav-total-val{display:none!important;}}
 
 /* ── MOBILE (phones ≤640px) ─────────────────────────── */
 @media(max-width:640px){
@@ -470,7 +471,6 @@ input[type=range]{flex:1;accent-color:var(--pc-accent);}
   .nav-logo{padding:0 .6rem;border-right:none;}
   .nav-tab{padding:0 .65rem;font-size:.7rem;height:44px;}
   .nav-right{gap:.4rem;padding:0 .4rem;border-left:none;}
-  .nav-actions,.nav-total-label,.nav-total-val{display:none!important;}
   .nav-profile span{display:none;}
   .nav-profile{padding:.3rem .35rem;}
 
