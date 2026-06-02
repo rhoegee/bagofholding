@@ -2001,22 +2001,34 @@ function loadCSV(event){
     });
 
     // Parse header row to find column indices
-    const headers=parseLine(lines[0]).map(h=>h.toLowerCase().replace(/[^a-z]/g,''));
-    const col=name=>headers.findIndex(h=>h.includes(name));
-    const iCat=col('cat'), iName=col('item')<0?col('name'):col('item');
-    const iBrand=col('brand'), iQty=col('qty'), iOz=col('oz'), iNotes=col('note');
+    const rawHeaders=parseLine(lines[0]);
+    const headers=rawHeaders.map(h=>h.toLowerCase().replace(/[^a-z]/g,''));
+    console.log('[CSV import] headers:', rawHeaders);
+    const col=(...names)=>{for(const n of names){const i=headers.findIndex(h=>h.includes(n));if(i>=0)return i;}return -1;};
+    const iCat=col('cat','category');
+    const iName=col('item','name');
+    const iBrand=col('brand');
+    const iQty=col('qty','quantity');
+    const iOz=col('oz','weight','gram');  // oz, weightoz, weight, grams
+    const iNotes=col('note','desc','comment');
+    console.log('[CSV import] col map — cat:',iCat,'name:',iName,'brand:',iBrand,'qty:',iQty,'oz:',iOz,'notes:',iNotes);
+
+    if(iName<0){alert('Could not find an Item or Name column in this CSV.\nHeaders found: '+rawHeaders.join(', '));return;}
+    if(iOz<0){alert('Could not find a Weight column in this CSV.\nHeaders found: '+rawHeaders.join(', '));return;}
 
     let imported=0, skipped=0, fallback=0;
     lines.slice(1).forEach(line=>{
       const c=parseLine(line);
-      const name=(iName>=0?c[iName]:c[0]||'').trim();
+      const name=(c[iName]||'').trim();
       if(!name)return;
-      // Skip subtotal rows
-      if(name.toUpperCase().includes('SUBTOTAL'))return;
+      // Skip subtotal/blank rows
+      if(/subtotal|^-+$/.test(name.toUpperCase()))return;
 
       const brand=(iBrand>=0?c[iBrand]:'')||'';
       const qty=parseInt(iQty>=0?c[iQty]:'1')||1;
-      const oz=parseFloat(iOz>=0?c[iOz]:'0')||0;
+      let oz=parseFloat(iOz>=0?c[iOz]:'0')||0;
+      // If column name contains 'gram', convert g→oz
+      if(oz&&headers[iOz].includes('gram'))oz=oz/28.3495;
       const notes=(iNotes>=0?c[iNotes]:'')||'';
       if(!oz){skipped++;return;}
 
@@ -2033,7 +2045,7 @@ function loadCSV(event){
     });
     saveLocal();renderGear();updateCalc();
     let msg=`Imported ${imported} item${imported!==1?'s':''}.`;
-    if(skipped)msg+=` ${skipped} skipped (no weight).`;
+    if(skipped)msg+=` ${skipped} skipped (weight was 0 or blank).`;
     if(fallback)msg+=` ${fallback} placed in Utility (category not recognized).`;
     alert(msg);
   };
