@@ -322,7 +322,6 @@ body[data-gear-layout="cards"] .gear-table tr.edit-row td{display:table-cell;}
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
       </button>
       <div class="hamburger-menu" id="hamburger-menu" style="display:none;">
-        <button class="ham-item" onclick="saveJSON();closeHamburger()">💾 Save</button>
         <button class="ham-item" onclick="document.getElementById('json-load').click();closeHamburger()">📂 Load</button>
         <button class="ham-item" onclick="document.getElementById('csv-load').click();closeHamburger()">📥 Import CSV</button>
         <button class="ham-item" onclick="exportExcel();closeHamburger()">📊 Export Excel</button>
@@ -333,13 +332,8 @@ body[data-gear-layout="cards"] .gear-table tr.edit-row td{display:table-cell;}
     </div>
     <div class="nav-actions">
       <button class="nav-btn primary" onclick="saveJSON()" title="Save gear list to file">Save</button>
-      <button class="nav-btn" onclick="document.getElementById('json-load').click()" title="Load a previously saved file">Load</button>
       <input type="file" id="json-load" accept=".json" style="display:none" onchange="loadJSON(event)">
-      <button class="nav-btn" onclick="document.getElementById('csv-load').click()" title="Import CSV">CSV</button>
       <input type="file" id="csv-load" accept=".csv" style="display:none" onchange="loadCSV(event)">
-      <button class="nav-btn" onclick="exportExcel()" title="Export to Excel">Excel</button>
-      <button class="nav-btn" onclick="printChecklist()" title="Print gear checklist">Print</button>
-      <button class="nav-btn" onclick="showSendToPhone()" title="Send gear list to phone via QR code">Share</button>
     </div>
   </div>
 </nav>

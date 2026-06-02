@@ -468,7 +468,7 @@ input[type=range]{flex:1;accent-color:var(--pc-accent);}
 .rules-card ul li::before{content:'—';position:absolute;left:0;color:var(--pc-trim);}
 
 /* ── HAMBURGER MENU ─────────────────────────────────── */
-.hamburger-btn{display:none;}
+.hamburger-btn{display:flex;}
 .hamburger-btn svg{width:18px;height:18px;display:block;}
 .hamburger-menu{position:absolute;top:calc(100% + 4px);right:0;
   background:var(--pc-anchor);border:1px solid rgba(244,236,216,.22);
@@ -480,7 +480,6 @@ input[type=range]{flex:1;accent-color:var(--pc-accent);}
   background:none;border:none;cursor:pointer;white-space:nowrap;}
 .ham-item:hover{background:rgba(244,236,216,.1);}
 .ham-divider{height:1px;background:rgba(244,236,216,.15);margin:.3rem 0;}
-@media(max-width:1024px){.hamburger-btn{display:flex;}}
 
 /* Long-press flash feedback */
 @keyframes lp-flash{0%{opacity:1;}40%{opacity:.5;}100%{opacity:1;}}
