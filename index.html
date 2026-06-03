@@ -640,7 +640,7 @@ body[data-gear-layout="cards"] .gear-table tr.edit-row td{display:table-cell;}
 </div>
 
 <script src="wordmark-core.js"></script>
-<script src="pc-icons.js"></script>
+<script src="pc-icons.js?v=2"></script>
 <script>
 // ═══════════════════════════════════════════════
 // GLOBAL ERROR HANDLING
@@ -661,7 +661,7 @@ window.onunhandledrejection = function(e) {
 function cssVar(name){return getComputedStyle(document.documentElement).getPropertyValue(name).trim();}
 
 // ── Category → icon glyph maps (pc-icons.js keys) ──
-const CAT_ICON={bags:'pack',sleep:'sleep',equipment:'tent',clothing:'jacket',rain:'rain',
+const CAT_ICON={bags:'pack',sleep:'sleep',equipment:'poles',clothing:'jacket',rain:'rain',
   care:'soap',food:'cook',water:'bottle',utility:'knife',luxury:'chair'};
 const CREW_CAT_ICON={shelter:'tent',cook:'cook',bear:'bear',safety:'compass',sanitation:'trowel',
   repair:'tape',consumables:'fuel',water:'bottle',misc:'box'};
