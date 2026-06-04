@@ -266,7 +266,7 @@ body[data-gear-layout="cards"] .gear-table tr.edit-row td{display:table-cell;}
     <div class="modal-row">
       <div class="modal-field">
         <label class="modal-label">Arrival Date (auto-filled)</label>
-        <input class="modal-input" id="p-arrival" type="date" value="2026-06-16">
+        <input class="modal-input" id="p-arrival" type="date">
       </div>
       <div class="modal-field">
         <label class="modal-label">Trek Length (auto-filled)</label>
@@ -1019,7 +1019,7 @@ function openProfileModal(){
   setVal('p-name', profile.name||'');
   setVal('p-troop', profile.troop||'');
   setVal('p-council', profile.council||'');
-  setVal('p-arrival', profile.arrival||'2026-06-16');
+  setVal('p-arrival', profile.arrival||'');
   setVal('p-crew-num', profile.crewNumber||'');
   setVal('p-itin-num', profile.itinNumber||'');
   setSelectByValue('p-trek-length', profile.trekLength||12);
@@ -2187,35 +2187,6 @@ function exportExcel(){
 
   // Sheet 2: Pack Weight by Day
   const pwRows=[['Day','Date','Camp','Miles','Food (oz)','Water (oz)','Crew Share (oz)','Base Gear (oz)','Total (oz)','Total (lbs+oz)','Dry Camp','Resupply']];
-  // Day 0 row if early arrival selected
-  if(profile.day0){
-    const day0Date=new Date(getArrivalDate().getTime()-86400000);
-    const tr0=document.createElement('tr');
-    tr0.innerHTML=`
-      <td>
-        <div class="itin-day" style="color:var(--muted)">0</div>
-        <div class="itin-date">${formatDate(day0Date)}</div>
-      </td>
-      <td>
-        <div class="itin-camp">Camping HQ</div>
-        <div style="font-size:0.75rem;color:var(--muted);margin-top:0.2rem;">Early arrival · Optional</div>
-        <div style="font-size:0.72rem;color:var(--gold);margin-top:0.15rem;font-style:italic;">Arrive early — lunch & dinner at CHQ</div>
-      </td>
-      <td class="itin-miles">—</td>
-      <td class="itin-elev">—</td>
-      <td>—</td>
-      <td><span class="badge badge-chq">CHQ</span></td>
-      <td class="hide-sm">—</td>
-      <td>
-        <div class="menu-block">
-          <div style="font-size:0.75rem;color:var(--muted2)">🍽 Lunch @ CHQ</div>
-          <div style="font-size:0.75rem;color:var(--muted2)">🍽 Dinner @ CHQ</div>
-        </div>
-      </td>
-    `;
-    tbody.appendChild(tr0);
-  }
-
   const exportItin=getActiveItinerary();
   (exportItin?exportItin.dayData:[]).forEach(day=>{
     const date=getDayDate(day.day);
