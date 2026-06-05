@@ -1504,9 +1504,9 @@ function renderGear(){
         <td class="td-weight">${ozToStr(item.oz)}</td>
         <td class="td-notes" ${item.notes?`title="${item.notes}"`:''}>${item.notes||''}</td>
         <td class="td-actions">
-          <select class="move-cat-select" title="Move to category" onchange="moveItem('${key}',${idx},this)" onclick="event.stopPropagation()">
+          <select class="move-cat-select" title="Move to category" onchange="moveCrewItem('${key}',${idx},this)" onclick="event.stopPropagation()">
             <option value=""></option>
-            ${Object.entries(gearData).filter(([k])=>k!==key).map(([k,c])=>`<option value="${k}">${c.label}</option>`).join('')}
+            ${Object.entries(crewGearData).filter(([k])=>k!==key).map(([k,c])=>`<option value="${k}">${c.label}</option>`).join('')}
           </select>
           <button class="action-btn del sel-toggle" id="sel-${key}-${idx}" onclick="toggleSel('${key}',${idx},this)" title="Select to delete">✕</button>
         </td>
@@ -1640,6 +1640,13 @@ function moveItem(fromKey,idx,select){
   const item=gearData[fromKey].items.splice(idx,1)[0];
   gearData[toKey].items.push(item);
   renderGear();updateCalc();scheduleAutoSave();
+}
+function moveCrewItem(fromKey,idx,select){
+  const toKey=select.value;
+  if(!toKey){return;}
+  const item=crewGearData[fromKey].items.splice(idx,1)[0];
+  crewGearData[toKey].items.push(item);
+  renderCrewGear();updateCrewStats();scheduleAutoSave();
 }
 
 let overrideOz=null;
