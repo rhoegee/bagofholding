@@ -151,7 +151,7 @@ const HELP_CONTENT = [
         a: "Open the menu (☰) and tap <strong>Export Excel</strong>."
       },
       {
-        q: "Something isn't working. Who do I contact?",
+        q: "I have feedback. How do I reach you?",
         a: "Send a note to <a href=\"mailto:packcheck.app@gmail.com\" style=\"color:var(--pc-accent);\">packcheck.app@gmail.com</a>."
       }
     ]
