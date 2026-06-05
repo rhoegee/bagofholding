@@ -119,6 +119,10 @@ const HELP_CONTENT = [
       {
         q: "How do Lead Advisors figure out the crew gear weight to share?",
         a: "The simplest method is to weigh the crew gear directly — throw everything in a pile, put it on a bathroom scale, and that's your number. Some advisors use the itemized list in this app to estimate before the trip, then confirm on a scale at home before departure. Either way, share the final number in pounds with your crew."
+      },
+      {
+        q: "How do I share the crew gear list with my scouts?",
+        a: "Go to the <strong>Crew Gear</strong> tab and click <strong>Share Crew Gear List</strong> at the top of the configuration panel. This generates a short link and a QR code. Copy the link and paste it into an email or text to your crew — or have scouts scan the QR code directly. When they open the link, they'll be prompted to load your crew gear list into their app. The link is valid for 90 days."
       }
     ]
   },

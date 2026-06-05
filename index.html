@@ -309,7 +309,7 @@ body[data-gear-layout="cards"] .gear-table tr.edit-row td{display:table-cell;}
     </div>
   </div>
   <div class="nav-tabs">
-    <button class="nav-tab active" onclick="showPage('gear',this)">Gear List</button>
+    <button class="nav-tab active" onclick="showPage('gear',this)">Your Gear</button>
     <button class="nav-tab" onclick="showPage('crew',this)">Crew Gear</button>
     <button class="nav-tab" onclick="showPage('calc',this)">Pack Weight</button>
     <button class="nav-tab" onclick="showPage('itin',this)">Itinerary</button>
@@ -369,7 +369,6 @@ body[data-gear-layout="cards"] .gear-table tr.edit-row td{display:table-cell;}
   <div class="hero">
     <div class="hero-eyebrow">Philmont Scout Ranch · Packing Checklist</div>
     <div class="hero-title">Personal <span>Gear</span></div>
-    <div class="hero-sub">Build your pack starting with the official Philmont recommended list.</div>
   </div>
 
   <div class="stats-row">
@@ -447,7 +446,6 @@ body[data-gear-layout="cards"] .gear-table tr.edit-row td{display:table-cell;}
       <div style="flex:1;">
         <div class="hero-eyebrow">Shared Equipment · Split Among Crew</div>
         <div class="hero-title">Crew <span>Gear</span></div>
-        <div class="hero-sub">Philmont-issued and crew-provided shared equipment. Your per-person crew gear weight is calculated here.</div>
         <div id="crew-sync-status" style="font-family:'JetBrains Mono',monospace;font-size:0.62rem;color:var(--muted);margin-top:0.25rem;"></div>
       </div>
       <div style="text-align:right;flex-shrink:0;">
@@ -482,14 +480,6 @@ body[data-gear-layout="cards"] .gear-table tr.edit-row td{display:table-cell;}
         </div>
         <div id="crew-override-note" style="font-size:0.72rem;color:var(--muted);font-style:italic;margin-top:0.35rem;">Enter the total crew gear weight your advisor measured. Tent split still applies.</div>
       </div>
-      <div style="margin-bottom:1.25rem;">
-        <div style="font-family:'JetBrains Mono',monospace;font-size:0.58rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);margin-bottom:0.5rem;">Tent Weight Override</div>
-        <div style="display:flex;align-items:center;gap:0.5rem;">
-          <input class="calc-input" id="tent-override-lbs" type="number" step="0.1" min="0" placeholder="Tent lbs" style="flex:1;" oninput="updateTentOverride()">
-          <button class="nav-btn" id="tent-override-clear-btn" style="display:none;color:var(--pc-ink-soft);border-color:var(--pc-line-2);background:transparent;" onclick="clearTentOverride()">Clear</button>
-        </div>
-        <div style="font-size:0.72rem;color:var(--muted);font-style:italic;margin-top:0.35rem;">Tent weight only (lbs). Used to calculate leader vs. scout crew share. If blank, reads from the Tents category above.</div>
-      </div>
       <div style="background:var(--bg3);border:1px solid var(--border);border-radius:3px;padding:0.85rem;margin-bottom:1.25rem;">
         <div style="font-family:'JetBrains Mono',monospace;font-size:0.58rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);margin-bottom:0.6rem;">Share Breakdown</div>
         <div id="crew-share-breakdown" style="display:flex;flex-direction:column;gap:0.4rem;font-size:0.85rem;color:var(--muted2);"></div>
@@ -515,7 +505,6 @@ body[data-gear-layout="cards"] .gear-table tr.edit-row td{display:table-cell;}
   <div class="hero">
     <div class="hero-eyebrow">Pack Weight Simulator</div>
     <div class="hero-title">How Heavy Is <span>Your Pack?</span></div>
-    <div class="hero-sub">Real trail weight day by day — personal gear, crew share, food depletion, and water.</div>
   </div>
   <div class="calc-wrap">
     <div class="calc-grid">
@@ -581,7 +570,6 @@ body[data-gear-layout="cards"] .gear-table tr.edit-row td{display:table-cell;}
   <div class="hero">
     <div class="hero-eyebrow" id="itin-eyebrow">Select your itinerary in Profile Setup to load your trek schedule</div>
     <div class="hero-title">Your <span>Trek</span></div>
-    <div class="hero-sub" id="itin-hero-sub">Day-by-day schedule, menus, and estimated pack weights for your assigned itinerary.</div>
   </div>
   <div style="overflow-x:auto;">
     <table class="itin-table">
@@ -3075,5 +3063,9 @@ function clearBatchSelection(){
     </div>
   </div>
 </div>
+
+<footer style="text-align:center;padding:1.5rem 1rem;font-family:'JetBrains Mono',monospace;font-size:0.65rem;color:var(--pc-ink-soft);letter-spacing:0.04em;border-top:1px solid var(--pc-line);margin-top:2rem;">
+  Not affiliated with Philmont Scout Ranch or Scouting America
+</footer>
 </body>
 </html>
