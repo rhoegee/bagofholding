@@ -7,16 +7,24 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    env:
+      DEPLOY_TOKEN: ${{ secrets.PHILMONT_DEPLOY_TOKEN }}
     steps:
       - uses: actions/checkout@v4
+
+      - name: Configure git credentials
+        run: |
+          git config user.email "deploy@packcheck.app"
+          git config user.name "Packcheck Deploy"
+          git config --global credential.helper store
+          printf 'https://%s@github.com\n' "$DEPLOY_TOKEN" > ~/.git-credentials
 
       - name: Set CNAME
         run: echo "philmont.packcheck.app" > CNAME
 
-      - name: Push to philmont.packcheck.app
+      - name: Commit and push
         run: |
-          git config user.email "deploy@packcheck.app"
-          git config user.name "Packcheck Deploy"
           git add CNAME
           git diff --staged --quiet || git commit -m "Set CNAME for philmont.packcheck.app"
-          git push https://x-access-token:${{ secrets.PHILMONT_DEPLOY_TOKEN }}@github.com/rhoegee/philmont.packcheck.app.git HEAD:main --force
+          git remote add philmont https://github.com/rhoegee/philmont.packcheck.app.git
+          git push philmont HEAD:main --force
