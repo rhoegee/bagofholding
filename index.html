@@ -2766,7 +2766,8 @@ window.onload=()=>{
     if(_cParam){
       const data=JSON.parse(LZString.decompressFromEncodedURIComponent(_cParam));
       if(data&&confirm('Load crew gear list from your leader?\n\nThis will replace your current crew gear list.')){
-        crewGearData=migrateCrewGearData(data);
+        if(data.v===2){unpackCrewGear(data);}
+        else{crewGearData=migrateCrewGearData(data);}
         crewGearCustomized=true;
         saveLocal();
       }
@@ -2858,15 +2859,35 @@ function unpackGear(data){
     if(data.tc.bw)trekConfig.bodyWeight=data.tc.bw;
   }
 }
-function showShareCrewGear(){
-  const compressed=LZString.compressToEncodedURIComponent(JSON.stringify(crewGearData));
-  const shareUrl=location.origin+location.pathname+'?c='+compressed;
-  // Use native share sheet on mobile if available
-  if(navigator.share){
-    navigator.share({title:'Packcheck — Crew Gear List',text:'Open this link to load our crew gear list in Packcheck.',url:shareUrl}).catch(()=>{});
-    return;
+function packCrewGear(){
+  // Compact: only name/oz/qty/included — strip brand/notes/warn/colors
+  const c={};
+  for(const key of CREW_CAT_ORDER){
+    const cat=crewGearData[key];
+    if(!cat||!cat.items||!cat.items.length)continue;
+    c[key]=cat.items.map(i=>{
+      const e={n:i.name};
+      if(i.oz)e.o=+(parseFloat(i.oz)||0).toFixed(1);
+      if(i.qty&&i.qty!==1)e.q=i.qty;
+      if(!i.included)e.u=1;
+      return e;
+    });
   }
-  // Fall back to modal with QR + copy link
+  return {v:2,c};
+}
+function unpackCrewGear(data){
+  if(!data||!data.c)return false;
+  for(const[key,items]of Object.entries(data.c)){
+    if(!crewGearData[key])continue;
+    crewGearData[key].items=items.map(i=>({
+      name:i.n||'',brand:'',oz:i.o||0,qty:i.q||1,notes:'',included:!i.u,warn:null
+    }));
+  }
+  return true;
+}
+function showShareCrewGear(){
+  const compressed=LZString.compressToEncodedURIComponent(JSON.stringify(packCrewGear()));
+  const shareUrl=location.origin+location.pathname+'?c='+compressed;
   document.getElementById('crew-share-url-input').value=shareUrl;
   const wrap=document.getElementById('crew-share-qr-wrap');
   const errEl=document.getElementById('crew-share-qr-error');
