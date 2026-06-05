@@ -2032,6 +2032,7 @@ function renderItinerary(){
     if(day.resupply)badges+=`<span class="badge badge-food">Resupply</span>`;
     if(day.dry)badges+=`<span class="badge badge-dry">Dry Camp</span>`;
     if(day.chuck)badges+=`<span class="badge badge-chuck">Chuckwagon</span>`;
+    if(day.type==='conservation')badges+=`<span class="badge badge-conserv">Conservation</span>`;
 
     // Meals
     let mealsHtml='';
