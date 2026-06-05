@@ -1228,6 +1228,8 @@ function updateCrewDonut(){
 
 let crewEditingRow=null;
 
+const CREW_CAT_ORDER=['tents','othershelter','cook','bear','safety','sanitation','repair','consumables','water','misc'];
+
 function renderCrewGear(){
   const container=document.getElementById('crew-sections');
   if(!container)return;
@@ -1242,7 +1244,8 @@ function renderCrewGear(){
   const tot=crewTotalOz();
   const maxCat=Math.max(...Object.values(crewGearData).map(c=>c.items.reduce((s,i)=>s+i.oz,0)));
 
-  Object.entries(crewGearData).forEach(([key,cat])=>{
+  const orderedKeys=[...CREW_CAT_ORDER.filter(k=>crewGearData[k]),...Object.keys(crewGearData).filter(k=>!CREW_CAT_ORDER.includes(k))];
+  orderedKeys.map(k=>[k,crewGearData[k]]).forEach(([key,cat])=>{
     const cOz=crewCatOz(key);
     const pct=tot>0?Math.round(cOz/tot*100):0;
     const barPct=maxCat>0?Math.round(cOz/maxCat*100):0;
