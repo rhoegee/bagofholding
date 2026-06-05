@@ -531,11 +531,7 @@ body[data-gear-layout="cards"] .gear-table tr.edit-row td{display:table-cell;}
           </label>
         </div>
         <div class="calc-row"><span class="calc-label">Body weight (lbs)</span><input class="calc-input" id="body-weight" type="number" value="175" onchange="updateCalc()"></div>
-        <div style="margin-top:0.75rem;">
-          <div style="font-family:'JetBrains Mono',monospace;font-size:0.6rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.35rem;">Staff-Cooked Dinner Nights</div>
-          <input class="calc-input wide" id="staff-days" type="text" placeholder="e.g. 3,6,7" onchange="updateCalc()">
-          <div class="calc-note">Enter the day number(s) of any staff-cooked dinners on your itinerary - chuckwagon, family dinner, or similar. Comma separated.</div>
-        </div>
+        <div class="calc-note" style="margin-top:0.75rem;font-style:italic;">&#42; Trail food weight is adjusted for staff-cooked dinners based on your itinerary.</div>
       </div>
       <div class="calc-card">
         <div class="calc-card-title">Resupply &amp; Dry Camp Days</div>
@@ -1844,13 +1840,7 @@ function updateCalc(){
   if(liveCrewOz>0){const cgEl=document.getElementById('crew-gear-oz');if(cgEl)cgEl.value=Math.round(liveCrewOz);}
   trekConfig.crewGearOz=Math.max(0,safeFloat(getVal('crew-gear-oz',0),0));
   trekConfig.bodyWeight=Math.max(50,safeFloat(getVal('body-weight',175),175));
-  // Auto-fill staff days from itinerary if field is blank
-  const sdEl=document.getElementById('staff-days');
-  if(sdEl&&!sdEl.value.trim()&&trekConfig.staffDays.length>0){
-    sdEl.value=trekConfig.staffDays.join(',');
-  }
-  const sStr=getVal('staff-days','')||'';
-  trekConfig.staffDays=sStr.split(',').map(function(s){return safeInt(s.trim(),NaN);}).filter(function(n){return !isNaN(n);});
+  // staffDays populated from itinerary in saveProfile() — no manual input
   document.getElementById('day-slider').max=trekConfig.days;
   const day=Math.min(parseInt(document.getElementById('day-slider').value)||1,trekConfig.days);
   onDaySlider(day);
@@ -2159,7 +2149,6 @@ function loadJSON(event){
         setVal('crew-size', trekConfig.crewSize||8);
         setVal('crew-gear-oz', trekConfig.crewGearOz||373);
         setVal('body-weight', trekConfig.bodyWeight||175);
-        setVal('staff-days', Array.isArray(trekConfig.staffDays)?trekConfig.staffDays.join(','):'');
       }
       if(data.overrideOz!==undefined&&data.overrideOz!==null){
         overrideOz=data.overrideOz;
