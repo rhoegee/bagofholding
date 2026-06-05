@@ -2774,6 +2774,27 @@ window.onload=()=>{
       history.replaceState({},'',location.pathname);
     }
   }catch(e){console.warn('Crew URL import failed',e);}
+  try{
+    const _crewParam=new URLSearchParams(location.search).get('crew');
+    if(_crewParam){
+      fetch('https://api.github.com/gists/'+_crewParam,{headers:{'Accept':'application/vnd.github+json'}})
+      .then(r=>{if(!r.ok)throw new Error();return r.json();})
+      .then(gist=>{
+        const content=gist.files&&gist.files['crew.json']&&gist.files['crew.json'].content;
+        if(!content)throw new Error();
+        const data=JSON.parse(content);
+        if(confirm('Load crew gear list from your leader?\n\nThis will replace your current crew gear list.')){
+          if(data.v===2){unpackCrewGear(data);}
+          else{crewGearData=migrateCrewGearData(data);}
+          crewGearCustomized=true;
+          saveLocal();
+          renderCrewGear();updateCrewStats();
+        }
+      })
+      .catch(()=>alert('Could not load crew gear list. The link may have expired or be invalid.'));
+      history.replaceState({},'',location.pathname);
+    }
+  }catch(e){console.warn('Crew URL import failed',e);}
   try{renderGear();}catch(e){console.error('renderGear error:',e);}
   try{renderCrewGear();}catch(e){console.error('renderCrewGear error:',e);}
   try{renderProfileCard();}catch(e){console.error('renderProfileCard error:',e);}
@@ -2886,22 +2907,37 @@ function unpackCrewGear(data){
   return true;
 }
 function showShareCrewGear(){
-  const compressed=LZString.compressToEncodedURIComponent(JSON.stringify(packCrewGear()));
-  const shareUrl=location.origin+location.pathname+'?c='+compressed;
-  document.getElementById('crew-share-url-input').value=shareUrl;
+  const modal=document.getElementById('crew-share-modal');
   const wrap=document.getElementById('crew-share-qr-wrap');
   const errEl=document.getElementById('crew-share-qr-error');
-  wrap.innerHTML='';errEl.style.display='none';
-  const canvas=document.createElement('canvas');
-  wrap.appendChild(canvas);
-  try{
+  const inp=document.getElementById('crew-share-url-input');
+  const copyBtn=document.getElementById('crew-share-copy-btn');
+  wrap.innerHTML='<div style="padding:2rem 0;font-size:.85rem;color:var(--pc-ink-soft);">Generating link…</div>';
+  errEl.style.display='none';
+  inp.value='';
+  copyBtn.disabled=true;
+  modal.style.display='flex';
+  const payload=JSON.stringify(packCrewGear());
+  fetch('https://api.github.com/gists',{
+    method:'POST',
+    headers:{'Content-Type':'application/json','Accept':'application/vnd.github+json'},
+    body:JSON.stringify({public:true,description:'Packcheck crew gear list',files:{'crew.json':{content:payload}}})
+  })
+  .then(r=>{if(!r.ok)throw new Error('HTTP '+r.status);return r.json();})
+  .then(data=>{
+    const shareUrl=location.origin+location.pathname+'?crew='+data.id;
+    inp.value=shareUrl;
+    copyBtn.disabled=false;
+    wrap.innerHTML='';
+    const canvas=document.createElement('canvas');
+    wrap.appendChild(canvas);
     new QRious({element:canvas,value:shareUrl,size:248,level:'L'});
-  }catch(e){
+  })
+  .catch(()=>{
     wrap.innerHTML='';
     errEl.style.display='block';
-    errEl.textContent='Data too large for QR. Copy the link below and share it directly.';
-  }
-  document.getElementById('crew-share-modal').style.display='flex';
+    errEl.textContent='Could not generate link. Check your connection and try again.';
+  });
 }
 function closeCrewShareModal(){document.getElementById('crew-share-modal').style.display='none';}
 function copyCrewShareUrl(e){
@@ -3019,7 +3055,7 @@ function clearBatchSelection(){
       <input id="crew-share-url-input" type="text" readonly style="width:100%;font-size:.65rem;padding:.45rem .6rem;border:1px solid var(--pc-line);border-radius:4px;background:var(--pc-bg);color:var(--pc-ink-soft);box-sizing:border-box;">
     </div>
     <div class="modal-actions">
-      <button class="modal-btn" onclick="copyCrewShareUrl(event)">Copy Link</button>
+      <button id="crew-share-copy-btn" class="modal-btn" onclick="copyCrewShareUrl(event)">Copy Link</button>
       <button class="modal-btn primary" onclick="closeCrewShareModal()">Done</button>
     </div>
   </div>
