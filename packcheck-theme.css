@@ -261,7 +261,7 @@ nav{position:sticky;top:0;z-index:100;background:var(--pc-anchor);
 [data-theme="dark"] .section-name{color:var(--pc-cream)!important;}
 .section-meta{display:flex;align-items:center;gap:.85rem;}
 .section-weight{font-family:var(--font-mono);font-weight:500;font-size:.72rem;color:var(--pc-ink);}
-.section-pct{font-family:var(--font-mono);font-size:.6rem;color:var(--pc-ink-soft);
+.section-pct{font-family:var(--font-mono);font-size:.6rem;color:var(--pc-ink);
   background:var(--pc-canvas);padding:.16rem .45rem;border-radius:4px;}
 .section-toggle{font-family:var(--font-mono);font-size:.68rem;color:var(--pc-ink-faint);transition:transform .18s;}
 .section-toggle.open{transform:rotate(90deg);}
