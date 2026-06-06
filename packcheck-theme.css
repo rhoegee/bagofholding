@@ -206,7 +206,7 @@ nav{position:sticky;top:0;z-index:100;background:var(--pc-anchor);
 .stat-val{font-family:var(--font-disp);font-weight:700;font-size:1.7rem;color:var(--pc-anchor);line-height:1;white-space:nowrap;}
 .stat-val .u{font-size:.62em;font-weight:500;color:var(--pc-ink-faint);letter-spacing:.02em;margin:0 .04em 0 .06em;}
 [data-theme="dark"] .stat-val{color:var(--pc-cream);}
-.stat-sub{font-family:var(--font-mono);font-size:.56rem;color:var(--pc-ink-faint);margin-top:.2rem;}
+.stat-sub{font-family:var(--font-mono);font-size:.56rem;color:var(--pc-ink-soft);margin-top:.2rem;}
 
 /* ── TWO-COL ───────────────────────────────────────── */
 .two-col{display:grid;grid-template-columns:1fr 330px;min-height:calc(100vh - 290px);}
