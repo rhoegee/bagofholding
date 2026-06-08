@@ -26,6 +26,6 @@ Topo source: `assets/packcheck-topo.jpg`
 Key approved values (do not change without review):
 - Topo opacity on pine bg: 30%
 - Topo opacity on cream bg: 60%
-- Tagline font: Zilla Slab 500 Italic at 34px
-- Kicker/wordmark gap: 17px
-- Wordmark: Oswald Bold 700 at 88px
+- Tagline font: Zilla Slab 500 Italic at 46px
+- Kicker: Oswald Regular 36px, gap 17px
+- Wordmark: Oswald Bold 700 at 124px
