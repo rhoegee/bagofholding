@@ -555,9 +555,9 @@ input[type=range]{flex:1;accent-color:var(--pc-accent);}
   /* Gear table: hide brand (col3) + notes (col6), redistribute widths */
   .gear-table{table-layout:fixed;}
   .gear-table col:nth-child(1){width:5%!important;}
-  .gear-table col:nth-child(2){width:52%!important;}
+  .gear-table col:nth-child(2){width:47%!important;}
   .gear-table col:nth-child(3){width:0!important;}
-  .gear-table col:nth-child(4){width:8%!important;}
+  .gear-table col:nth-child(4){width:13%!important;}
   .gear-table col:nth-child(5){width:27%!important;}
   .gear-table col:nth-child(6){width:0!important;}
   .gear-table col:nth-child(7){width:8%!important;}
