@@ -328,6 +328,10 @@ nav{position:sticky;top:0;z-index:100;background:var(--pc-anchor);
   width:100%;box-sizing:border-box;min-width:0;}
 /* narrow/med/wide — no longer set fixed widths; all inputs fill their column */
 .edit-input.narrow,.edit-input.med,.edit-input.wide{width:100%;}
+/* Hide number input spinners so they don't clip the value */
+.edit-input[type="number"]::-webkit-inner-spin-button,
+.edit-input[type="number"]::-webkit-outer-spin-button{-webkit-appearance:none;margin:0;}
+.edit-input[type="number"]{-moz-appearance:textfield;}
 
 /* ── BATCH SELECT ─────────────────────────────────── */
 .sel-toggle.sel-active{color:var(--pc-accent)!important;font-weight:700!important;}
@@ -555,16 +559,16 @@ input[type=range]{flex:1;accent-color:var(--pc-accent);}
   /* Gear table: hide brand (col3) + notes (col6), redistribute widths */
   .gear-table{table-layout:fixed;}
   .gear-table col:nth-child(1){width:5%!important;}
-  .gear-table col:nth-child(2){width:36%!important;}
+  .gear-table col:nth-child(2){width:28%!important;}
   .gear-table col:nth-child(3){width:0!important;}
-  .gear-table col:nth-child(4){width:22%!important;}
+  .gear-table col:nth-child(4){width:30%!important;}
   .gear-table col:nth-child(5){width:29%!important;}
   .gear-table col:nth-child(6){width:0!important;}
   .gear-table col:nth-child(7){width:8%!important;}
   .gear-table th:nth-child(3),.gear-table td:nth-child(3),
   .gear-table th:nth-child(6),.gear-table td:nth-child(6){display:none;}
-  .gear-table th:nth-child(2){width:36%!important;}
-  .gear-table th:nth-child(4){width:22%!important;}
+  .gear-table th:nth-child(2){width:28%!important;}
+  .gear-table th:nth-child(4){width:30%!important;}
   .gear-table th:nth-child(5){width:29%!important;}
   .move-cat-select{display:none;}
 
