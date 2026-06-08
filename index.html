@@ -1306,7 +1306,7 @@ function renderCrewGear(){
         <div class="add-row">
           <input class="add-input" style="flex:2;min-width:0;" id="cai-name-${key}" placeholder="Item name" onkeydown="if(event.key==='Enter')addCrewItem('${key}')">
           <input class="add-input" style="flex:1;min-width:0;" id="cai-brand-${key}" placeholder="Brand">
-          <input class="add-input narrow" id="cai-qty-${key}" placeholder="Qty" value="1">
+          <input class="add-input narrow" id="cai-qty-${key}" placeholder="Qty">
           <input class="add-input narrow" id="cai-oz-${key}" placeholder="oz" oninput="this.value=this.value.replace(/[^0-9.]/g,'');">
           <input class="add-input" style="flex:1.2;min-width:0;" id="cai-notes-${key}" placeholder="Notes (optional)">
           <button class="add-btn" onclick="addCrewItem('${key}')">+ Add</button>
@@ -1486,7 +1486,7 @@ function renderGear(){
         <div class="add-row">
           <input class="add-input" style="flex:2;min-width:0;" id="ai-name-${key}" placeholder="Item name" onkeydown="if(event.key==='Enter')addItem('${key}')">
           <input class="add-input" style="flex:1;min-width:0;" id="ai-brand-${key}" placeholder="Brand">
-          <input class="add-input narrow" id="ai-qty-${key}" placeholder="Qty" value="1">
+          <input class="add-input narrow" id="ai-qty-${key}" placeholder="Qty">
           <input class="add-input narrow" id="ai-oz-${key}" placeholder="oz" oninput="this.value=this.value.replace(/[^0-9.]/g,'');">
           <input class="add-input" style="flex:1.2;min-width:0;" id="ai-notes-${key}" placeholder="Notes (optional)">
           <button class="add-btn" onclick="addItem('${key}')">+ Add</button>
