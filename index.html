@@ -2230,7 +2230,7 @@ function loadCSV(event){
     if(replace) Object.values(gearData).forEach(cat=>cat.items=[]);
     if(iOz<0){alert('Could not find a Weight column in this CSV.\nHeaders found: '+rawHeaders.join(', '));return;}
 
-    let imported=0, skipped=0, fallback=0;
+    let imported=0, fallback=0;
     rows.slice(1).forEach(c=>{
       const name=(c[iName]||'').trim();
       if(!name)return;
@@ -2245,7 +2245,6 @@ function loadCSV(event){
       // Fallback: if oz still 0, try decimal lbs column (scale reading)
       if(!oz&&iLbs>=0){const lbsVal=parseFloat(c[iLbs])||0;if(lbsVal)oz=Math.round(lbsVal*16*10)/10;}
       const notes=(iNotes>=0?c[iNotes]:'')||'';
-      if(!oz){skipped++;return;}
 
       // Match category
       let catKey='utility';
@@ -2260,8 +2259,7 @@ function loadCSV(event){
     });
     saveLocal();renderGear();updateCalc();
     let msg=`Imported ${imported} item${imported!==1?'s':''}.`;
-    if(skipped)msg+=` ${skipped} skipped (weight was 0 or blank).`;
-    if(fallback)msg+=` ${fallback} placed in Utility (category not recognized).`;
+if(fallback)msg+=` ${fallback} placed in Utility (category not recognized).`;
     alert(msg);
   };
   reader.readAsText(file);
